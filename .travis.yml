@@ -17,4 +17,3 @@ env:
  - GDX_VERSION=1.9.6
 
 after_success:
-  - ./gradlew desktop:dist
