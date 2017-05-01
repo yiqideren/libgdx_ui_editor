@@ -1,9 +1,10 @@
+sudo: required
+
 language: java
 
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
-  - chmod +x gradlew
   - sleep 5
 
 jdk:
@@ -12,5 +13,8 @@ jdk:
 
 env:
  - GDX_VERSION=1.9.6
+ - GDX_VERSION=1.9.5
+ - GDX_VERSION=1.9.4
+ - GDX_VERSION=1.9.3
 
 after_success:
