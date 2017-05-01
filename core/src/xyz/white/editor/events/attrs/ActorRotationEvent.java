@@ -1,0 +1,24 @@
+package xyz.white.editor.events.attrs;
+
+import xyz.white.editor.events.Event;
+
+/**
+ * Created by 10037 on 2017/4/23 0023.
+ */
+public class ActorRotationEvent implements Event {
+    public float rotation;
+
+    public ActorRotationEvent(float rotation){
+        this.rotation = rotation;
+    }
+
+    @Override
+    public Event redo() {
+        return null;
+    }
+
+    @Override
+    public Event undo() {
+        return null;
+    }
+}
