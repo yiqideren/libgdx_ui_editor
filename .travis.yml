@@ -11,7 +11,7 @@ before_script:
   - sleep 5
 
 jdk:
-  - oraclejdk8
+  - oraclejdk7
 
 env:
  - GDX_VERSION=1.9.6
