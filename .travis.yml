@@ -16,8 +16,6 @@ jdk:
 
 env:
  - GDX_VERSION=1.9.6
- - GDX_VERSION=1.9.5
- - GDX_VERSION=1.9.4
- - GDX_VERSION=1.9.3
 
 after_success:
+  - gradlew desktop:dist
