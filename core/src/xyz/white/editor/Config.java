@@ -3,7 +3,6 @@ package xyz.white.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.HashMap;

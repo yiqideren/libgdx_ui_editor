@@ -1,16 +1,12 @@
 package xyz.white.editor.windows.attrs;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.*;
 
-import com.sun.org.apache.bcel.internal.generic.ALOAD;
 import net.mwplay.nativefont.NativeTextField;
 
 import xyz.white.editor.Config;
@@ -20,7 +16,6 @@ import xyz.white.editor.events.attrs.ActorTextEvent;
 import xyz.white.editor.events.attrs.LabelWrapEvent;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static xyz.white.editor.Config.alignsIns;
 import static xyz.white.editor.Config.alignstrs;
