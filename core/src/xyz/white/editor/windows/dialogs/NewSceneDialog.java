@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.StringBuilder;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
 import xyz.white.editor.Config;
+import xyz.white.editor.actors.DigitsFieldFilter;
 import xyz.white.editor.utils.FileUtils;
 
 import java.io.*;
@@ -41,6 +42,9 @@ public class NewSceneDialog extends VisWindow {
         final VisTextField widthTF = new VisTextField();
         VisLabel heightLabel = new VisLabel("height");
         final VisTextField heightTF = new VisTextField();
+        DigitsFieldFilter digitsFieldFilter = new DigitsFieldFilter();
+        widthTF.setTextFieldFilter(digitsFieldFilter);
+        heightTF.setTextFieldFilter(digitsFieldFilter);
 
         VisTextButton okButton = new VisTextButton("OK", new ChangeListener() {
             @Override

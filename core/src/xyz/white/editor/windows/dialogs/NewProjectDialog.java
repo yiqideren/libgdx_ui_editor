@@ -97,6 +97,7 @@ public class NewProjectDialog extends VisWindow {
 		containerTable.add(projectField).minWidth(200).pad(10);
 		containerTable.add(chooseButton).pad(10);
 		containerTable.row();
+		containerTable.add();
 		containerTable.add(okButton).expandX().right();
 
 		containerTable.center();

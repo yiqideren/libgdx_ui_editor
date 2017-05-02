@@ -111,7 +111,7 @@ public class AssetWindow extends VisTable implements ApplicationEventListener {
                 getStage().addActor(new NewSceneDialog(curFileHandle, new NewSceneDialog.NewSceneListener() {
                     @Override
                     public void create(FileHandle fileHandle) {
-                        AssetWindow.this.load(fileHandle.path());
+                        AssetWindow.this.load(fileHandle.parent().path());
                     }
                 }).fadeIn());
             }
