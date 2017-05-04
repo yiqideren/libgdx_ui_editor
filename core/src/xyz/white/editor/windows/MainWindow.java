@@ -1,27 +1,24 @@
 package xyz.white.editor.windows;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.XmlReader;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisImageButton;
-import com.kotcrab.vis.ui.widget.VisWindow;
 
+import com.sun.org.apache.bcel.internal.generic.ALOAD;
 import net.mwplay.nativefont.NativeFont;
 import net.mwplay.nativefont.NativeLabel;
 
@@ -32,6 +29,7 @@ import xyz.white.editor.actors.SelectGroup;
 import xyz.white.editor.events.assets.LoadSceneEvent;
 import xyz.white.editor.events.attrs.*;
 import xyz.white.editor.events.editor.ActorAddEvent;
+import xyz.white.editor.events.editor.RefreshWindowEvent;
 import xyz.white.editor.events.editor.SureActorEvent;
 import xyz.white.editor.events.listener.AssetEventListener;
 import xyz.white.editor.events.listener.ChangeActorAttrListener;
@@ -39,6 +37,7 @@ import xyz.white.editor.events.listener.TreeEventListener;
 import xyz.white.editor.events.tree.TreeActorMoveEvent;
 import xyz.white.editor.events.tree.TreeCancelEvent;
 import xyz.white.editor.events.tree.TreeSelectedActroEvent;
+import xyz.white.editor.utils.FileUtils;
 
 import java.io.IOException;
 
@@ -46,15 +45,17 @@ import java.io.IOException;
  * Created by 10037 on 2017/4/15 0015.
  */
 
-public class MainWindow extends VisWindow implements ChangeActorAttrListener, TreeEventListener,AssetEventListener {
+public class MainWindow extends Group implements ChangeActorAttrListener, TreeEventListener,AssetEventListener {
     private NativeFont font;
     private SelectGroup selectedGroup = new SelectGroup();
+    private FileHandle curSceneFile;
 
     public MainWindow(String title) {
-        super(title,false);
+//        super(title,false);
         setSize(480, 800);
+        debug();
         EditorManager.getInstance().getEventBus().register(this);
-        setBackGround(Color.RED);
+//        setBackGround(Color.RED);
         font = new NativeFont();
         this.addListener(clickListener);
         this.addActor(selectedGroup);
@@ -113,12 +114,16 @@ public class MainWindow extends VisWindow implements ChangeActorAttrListener, Tr
         }
     }
 
+    private Image back ;
 
     private void setBackGround(Color color) {
         Pixmap pixmap = new Pixmap((int) getWidth(), (int) getHeight(), Pixmap.Format.RGB888);
         pixmap.setColor(color);
         pixmap.fill();
-        setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(pixmap))));
+        if (back == null){
+            back = new Image(new Texture(pixmap));
+            addActor(back);
+        }
     }
 
     private ClickListener clickListener = new ClickListener() {
@@ -148,10 +153,11 @@ public class MainWindow extends VisWindow implements ChangeActorAttrListener, Tr
     public void changeColor(Color color) {
         Actor curActor = selectedGroup.getLastSelectActor();
         if (curActor != null) {
-            if (curActor.equals(MainWindow.this))
-                setBackGround(color);
-            else
+            if (curActor.equals(MainWindow.this)){
+                //                setBackGround(color);
+            } else{
                 curActor.setColor(color);
+            }
         }
     }
 
@@ -259,14 +265,26 @@ public class MainWindow extends VisWindow implements ChangeActorAttrListener, Tr
 
     @Override
     public void loadScene(LoadSceneEvent event) {
-        XmlReader xmlReader = new XmlReader();
         try {
-            XmlReader.Element stageElement = xmlReader.parse(event.sceneFile);
-            float width = stageElement.getFloat("width",480);
-            float height = stageElement.getFloat("height",800);
-
+            this.curSceneFile = event.sceneFile;
+            MainWindow.this.clearChildren();
+            selectedGroup.clearAllActor();
+            MainWindow.this.addActor(selectedGroup);
+            FileUtils.ReadFile(MainWindow.this,event.sceneFile,clickListener);
+            MainWindow.this.setPosition(MainWindow.this.getWidth()/2,MainWindow.this.getParent().getHeight()/2, Align.center);
+            EditorManager.getInstance().getEventBus().post(new RefreshWindowEvent(MainWindow.this));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void saveScene(){
+        if (this.curSceneFile!=null){
+            try {
+                FileUtils.WriteFile(MainWindow.this,this.curSceneFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package xyz.white.editor.events.listener;
 import com.google.common.eventbus.Subscribe;
 
 import xyz.white.editor.events.editor.ActorAddEvent;
+import xyz.white.editor.events.editor.RefreshWindowEvent;
 import xyz.white.editor.events.editor.SureActorEvent;
 import xyz.white.editor.events.editor.AttrEvent;
 
@@ -20,5 +21,8 @@ public interface EditorEventListener {
 
     @Subscribe
     public void sureActor(SureActorEvent sureActorEvent);
+
+    @Subscribe
+    public void refreshWindow(RefreshWindowEvent event);
 }
 

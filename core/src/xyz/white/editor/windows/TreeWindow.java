@@ -1,5 +1,6 @@
 package xyz.white.editor.windows;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -14,8 +15,10 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 
 import xyz.white.editor.Config;
 import xyz.white.editor.EditorManager;
+import xyz.white.editor.actors.SelectGroup;
 import xyz.white.editor.events.editor.ActorAddEvent;
 import xyz.white.editor.events.editor.AttrEvent;
+import xyz.white.editor.events.editor.RefreshWindowEvent;
 import xyz.white.editor.events.editor.SureActorEvent;
 import xyz.white.editor.events.keyboard.KeyDelEvent;
 import xyz.white.editor.events.listener.EditorEventListener;
@@ -33,10 +36,10 @@ import xyz.white.editor.events.tree.TreeSelectedActroEvent;
 public class TreeWindow extends VisWindow implements EditorEventListener,KeyBoardEventListener{
     private Tree tree;
     private Tree.Node stageNode;
-    private Window mainWindw;
+    private MainWindow mainWindw;
     private DragAndDrop dragAndDrop = new DragAndDrop();
 
-    public TreeWindow(Window mainWindow) {
+    public TreeWindow(MainWindow mainWindow) {
         super("Tree",false);
         this.mainWindw = mainWindow;
         EditorManager.getInstance().getEventBus().register(this);
@@ -150,6 +153,38 @@ public class TreeWindow extends VisWindow implements EditorEventListener,KeyBoar
         Tree.Node selectedNode = tree.findNode(sureActorEvent.actor);
         if (selectedNode !=null && !tree.getSelection().contains(selectedNode)){
             tree.getSelection().choose(selectedNode);
+        }
+
+    }
+
+    @Override
+    public void refreshWindow(RefreshWindowEvent event) {
+        Group mainWindow = event.mainWindow;
+        Gdx.app.log("app","11111111111111");
+        addActorIntoTree(mainWindow,stageNode);
+    }
+
+    public void addActorIntoTree(Actor actor, Tree.Node parentNode){
+        if (actor instanceof MainWindow){
+            for (Actor child:((MainWindow) actor).getChildren()){
+                if (child instanceof SelectGroup) continue;
+                addActorIntoTree(child,parentNode);
+            }
+        }else {
+            StringBuilder item_name = new StringBuilder();
+            item_name.append(actor.getName()==null?"":actor.getName());
+            item_name.append("[");
+            item_name.append(EditorManager.getInstance()
+                    .getActorType(actor).getSimpleName());
+            item_name.append("]");
+            Tree.Node item = createNodeItem(actor,item_name.toString());
+            item.getActor().setTouchable(Touchable.disabled);
+            parentNode.add(item);
+            if (actor instanceof Group){
+                for (Actor child:((Group) actor).getChildren()){
+                    addActorIntoTree(child,item);
+                }
+            }
         }
 
     }

@@ -51,6 +51,7 @@ public class SelectGroup extends Group {
 
     public void clearAllActor(){
         for (Actor actor:getAllActor()){
+            if (actor instanceof MainWindow) continue;
             actor.setDebug(false);
         }
         selection.clear();

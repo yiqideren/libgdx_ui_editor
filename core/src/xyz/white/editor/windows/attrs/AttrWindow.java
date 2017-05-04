@@ -7,6 +7,7 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 import xyz.white.editor.Config;
 import xyz.white.editor.EditorManager;
 import xyz.white.editor.events.editor.ActorAddEvent;
+import xyz.white.editor.events.editor.RefreshWindowEvent;
 import xyz.white.editor.events.editor.SureActorEvent;
 import xyz.white.editor.events.editor.AttrEvent;
 import xyz.white.editor.events.listener.EditorEventListener;
@@ -56,6 +57,11 @@ public class AttrWindow extends VisWindow implements EditorEventListener {
     @Override
     public void sureActor(SureActorEvent event) {
         refreshAttr(event.actor);
+    }
+
+    @Override
+    public void refreshWindow(RefreshWindowEvent event) {
+
     }
 
 }

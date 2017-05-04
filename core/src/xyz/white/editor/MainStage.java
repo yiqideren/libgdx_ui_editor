@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
@@ -16,6 +17,7 @@ import xyz.white.editor.windows.attrs.AttrWindow;
  */
 public class MainStage extends Stage {
     final Pixmap pm = new Pixmap(Gdx.files.internal("icon/hand.png"));
+    private MainWindow mainWindow;
 
     public MainStage(Viewport viewport){
         super(viewport);
@@ -31,7 +33,7 @@ public class MainStage extends Stage {
         attrWindow.setOrigin(Align.center);
         attrWindow.setPosition(Config.width,Config.height,Align.topRight);
 
-        MainWindow mainWindow = new MainWindow("PreWindow");
+        mainWindow = new MainWindow("PreWindow");
 
         EditorWindow editorWindow = new EditorWindow(mainWindow);
         editorWindow.setOrigin(Align.center);
@@ -87,6 +89,8 @@ public class MainStage extends Stage {
             EditorManager.getInstance().getEventBus().post(new KeyDelEvent());
         }else if (keyCode == Input.Keys.SPACE){
             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm,0,0));
+        }else if (keyCode == Input.Keys.S && (UIUtils.ctrl())){
+            mainWindow.saveScene();
         }
         return super.keyDown(keyCode);
     }
