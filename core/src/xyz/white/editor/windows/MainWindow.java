@@ -56,7 +56,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
         debug();
         EditorManager.getInstance().getEventBus().register(this);
 //        setBackGround(Color.RED);
-        font = new NativeFont();
+        font = EditorManager.getInstance().getMainFont();
         this.addListener(clickListener);
         this.addActor(selectedGroup);
     }

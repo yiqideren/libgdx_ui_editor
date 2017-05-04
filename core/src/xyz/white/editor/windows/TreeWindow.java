@@ -160,7 +160,7 @@ public class TreeWindow extends VisWindow implements EditorEventListener,KeyBoar
     @Override
     public void refreshWindow(RefreshWindowEvent event) {
         Group mainWindow = event.mainWindow;
-        Gdx.app.log("app","11111111111111");
+        stageNode.removeAll();
         addActorIntoTree(mainWindow,stageNode);
     }
 

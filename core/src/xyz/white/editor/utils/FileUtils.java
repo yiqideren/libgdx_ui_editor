@@ -92,6 +92,7 @@ public class FileUtils {
     }
 
     public static void writeAttr(XmlWriter xmlWriter, Actor actor) throws IOException {
+        Class cla = EditorManager.getInstance().getActorType(actor);
         if (actor instanceof MainWindow){
             xmlWriter.element("Stage");
             writeGenAttr(xmlWriter,actor);
@@ -100,20 +101,20 @@ public class FileUtils {
                 writeAttr(xmlWriter,child);
             }
             xmlWriter.pop();
-        }else if (actor instanceof Group){
+        }else if (cla.equals(Group.class)){
             xmlWriter.element("Group");
             writeGenAttr(xmlWriter,actor);
             for (Actor child:((Group) actor).getChildren()){
                 writeAttr(xmlWriter,child);
             }
             xmlWriter.pop();
-        }else if (actor instanceof Label){
+        }else if (cla.equals(Label.class)){
             Label label = (Label) actor;
             xmlWriter.element("Label");
             writeGenAttr(xmlWriter,label);
             xmlWriter.attribute("text",label.getText());
             xmlWriter.pop();
-        }else if (actor instanceof Button){
+        }else if (cla.equals(Button.class)){
             Button button = (Button) actor;
             xmlWriter.element("Button");
             writeGenAttr(xmlWriter,button);
