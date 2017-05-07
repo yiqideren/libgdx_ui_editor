@@ -1,16 +1,19 @@
 package xyz.white.editor.windows;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
@@ -78,7 +81,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
                 cloneActor = new VisCheckBox("CheckButton");
                 break;
             case Config.IMAGE:
-                cloneActor = new VisImage(new Texture(Gdx.files.internal("badlogic.jpg")));
+                cloneActor = new VisImage(EditorManager.getInstance().assetManager.get("badlogic.jpg",Texture.class));
                 break;
             case Config.TEXTFIELD:
                 cloneActor = new TextField("Hello", VisUI.getSkin());
@@ -232,6 +235,16 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
         Actor curActor = selectedGroup.getLastSelectActor();
         if (curActor != null) {
             curActor.setRotation(rotation);
+        }
+    }
+
+    @Override
+    public void setImagePath(ImagePathEvent event) {
+        Actor curActor = selectedGroup.getLastSelectActor();
+        if (curActor instanceof Image){
+            ((Image) curActor).setDrawable(new TextureRegionDrawable(new TextureRegion(
+                    new Texture(Config.getImageFilePath(event.imagePath))
+            )));
         }
     }
 

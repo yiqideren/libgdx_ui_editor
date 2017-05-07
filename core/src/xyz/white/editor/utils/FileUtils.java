@@ -21,6 +21,7 @@ import xyz.white.editor.windows.MainWindow;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
 
 /**
  * Created by 10037 on 2017/5/1 0001.
@@ -45,7 +46,7 @@ public class FileUtils {
 
     public static void ReadAttr(Group parentGroup, XmlReader.Element element,EventListener dragListener){
         if (element.getName().equals("Stage")){
-            ParseGenAttr(parentGroup,element);
+            XmlUtils.ParseGenAttr(parentGroup,element);
             if (element.getChildCount()>0){
                 for (int i = 0;i<element.getChildCount();i++){
                     ReadAttr(parentGroup,element.getChild(i),dragListener);
@@ -53,7 +54,7 @@ public class FileUtils {
             }
         }else if (element.getName().equals("Group")){
             Group group = new Group();
-            ParseGenAttr(group,element);
+            XmlUtils.ParseGenAttr(group,element);
             group.addListener(dragListener);
             parentGroup.addActor(group);
            if (element.getChildCount()>0){
@@ -61,33 +62,22 @@ public class FileUtils {
                    ReadAttr(group,element.getChild(i),dragListener);
                }
            }
-        }else if (element.getName().equals("Label")){
-            NativeLabel label = new NativeLabel(element.get("text",""), EditorManager.getInstance().getMainFont());
-            parentGroup.addActor(label);
-            label.addListener(dragListener);
-            ParseGenAttr(label,element);
-        }else if (element.getName().equals("Button")){
-            VisImageButton button = new VisImageButton((VisUI.getSkin().get(VisImageButton.VisImageButtonStyle.class)));
-            parentGroup.addActor(button);
-            button.addListener(dragListener);
-            ParseGenAttr(button,element);
+        }else {
+            Actor actor = EditorManager.getInstance().getActorByName(element.getName());
+            parentGroup.addActor(actor);
+            actor.addListener(dragListener);
+            XmlUtils.ParseGenAttr(actor,element);
+            XmlUtils.ParseUqAttr(actor,element);
         }
+
     }
 
-    public static void ParseGenAttr(Actor actor, XmlReader.Element element){
-        actor.setWidth(element.getFloat("width",100));
-        actor.setHeight(element.getFloat("height",100));
-        actor.setPosition(element.getFloat("x",0),element.getFloat("y",0));
-        actor.setOrigin(element.getFloat("originX",0),element.getFloat("originY",0));
-        if (element.getAttributes().containsKey("name")){
-            actor.setName(element.get("name"));
-        }
-    }
 
     public static void WriteFile(Group group,FileHandle fileHandle) throws IOException {
         FileWriter writer = new FileWriter(fileHandle.file());
         XmlWriter xmlWriter= new XmlWriter(writer);
         writeAttr(xmlWriter,group);
+        xmlWriter.flush();
         writer.close();
     }
 
@@ -108,16 +98,10 @@ public class FileUtils {
                 writeAttr(xmlWriter,child);
             }
             xmlWriter.pop();
-        }else if (cla.equals(Label.class)){
-            Label label = (Label) actor;
-            xmlWriter.element("Label");
-            writeGenAttr(xmlWriter,label);
-            xmlWriter.attribute("text",label.getText());
-            xmlWriter.pop();
-        }else if (cla.equals(Button.class)){
-            Button button = (Button) actor;
-            xmlWriter.element("Button");
-            writeGenAttr(xmlWriter,button);
+        }else {
+            xmlWriter.element(cla.getSimpleName());
+            writeGenAttr(xmlWriter,actor);
+            writeUqAttr(xmlWriter,actor);
             xmlWriter.pop();
         }
     }
@@ -131,6 +115,16 @@ public class FileUtils {
                 .attribute("originY",actor.getOriginY());
         if (actor.getName()!=null&&!actor.getName().isEmpty()){
             writer.attribute("name",actor.getName());
+        }
+    }
+
+    public static void writeUqAttr(XmlWriter xmlWriter,Actor actor) throws IOException {
+        Object userobject = actor.getUserObject();
+        if (userobject!=null&&userobject instanceof HashMap){
+            HashMap<String,String> attrMap = (HashMap<String,String>)userobject;
+            for (String key : attrMap.keySet()){
+                xmlWriter.attribute(key,attrMap.get(key));
+            }
         }
     }
 }

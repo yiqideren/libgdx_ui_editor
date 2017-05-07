@@ -3,6 +3,7 @@ package xyz.white.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.HashMap;
@@ -40,6 +41,25 @@ public  class Config {
     public static String getProjectPath(){
         Preferences preferences = Gdx.app.getPreferences("white-projectPath");
         return preferences.getString("project","");
+    }
+
+    public static FileHandle getImageFilePath(String path){
+        StringBuilder stringBuilder = new StringBuilder();
+        String projectPath = getProjectPath();
+        stringBuilder.append(projectPath);
+        if (!projectPath.isEmpty()){
+            if (!projectPath.endsWith("/")){
+                stringBuilder.append("/");
+            }
+            stringBuilder.append(path==null?"":path);
+            String imagePath = stringBuilder.toString();
+            FileHandle fileHandle = new FileHandle(imagePath);
+            if (fileHandle.exists())
+             return fileHandle;
+            else return Gdx.files.internal("badlogic.jpg");
+
+        }
+        return null;
     }
 
     public static void setProjectPath(String path){

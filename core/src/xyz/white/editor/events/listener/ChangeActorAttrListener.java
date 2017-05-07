@@ -34,4 +34,7 @@ public interface ChangeActorAttrListener {
 
     @Subscribe
     void changeRotate(ActorRotationEvent event);
+
+    @Subscribe
+    void setImagePath(ImagePathEvent event);
 }

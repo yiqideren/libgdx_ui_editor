@@ -14,6 +14,7 @@ public class MainEditor extends ApplicationAdapter {
 	@Override
 	public void create () {
 		this.resize(Config.width,Config.height);
+//		VisUI.load("skins/tixel/x1/tixel.json");
 		VisUI.load();
 		mainViewPort = new FillViewport(Config.width,Config.height);
 		mainStage = new MainStage(mainViewPort);
