@@ -9,10 +9,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -242,9 +244,57 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
     public void setImagePath(ImagePathEvent event) {
         Actor curActor = selectedGroup.getLastSelectActor();
         if (curActor instanceof Image){
+            Texture source= new Texture(Config.getImageFilePath(event.imagePath));
             ((Image) curActor).setDrawable(new TextureRegionDrawable(new TextureRegion(
-                    new Texture(Config.getImageFilePath(event.imagePath))
-            )));
+                    source)
+            ));
+            curActor.setSize(source.getWidth(),source.getHeight());
+            selectedGroup.initLayout();
+        }
+    }
+
+    @Override
+    public void setButtonPath(ButtonPathEvent event) {
+        Actor curActor = selectedGroup.getLastSelectActor();
+        if (curActor instanceof Button){
+
+            String up = event.up;
+            String down = event.down;
+            String check = event.check;
+            Gdx.app.log("eee","0000"+up+"------down--"+down+"-----check--"+check);
+            if (up != null && !up.isEmpty()) {
+                Texture upTexture= new Texture(Config.getImageFilePath(up));
+                Drawable upDrawable = new TextureRegionDrawable(new TextureRegion(
+                        upTexture)
+                );
+                Drawable downDrawable ,checkDrawable;
+                if (down.isEmpty()){
+                    downDrawable =  new TextureRegionDrawable(new TextureRegion(
+                            upTexture)
+                    );
+                }else {
+                    downDrawable =  new TextureRegionDrawable(new TextureRegion(
+                            new Texture(Config.getImageFilePath(down)))
+                    );
+                }
+
+                if (check.isEmpty()){
+                    checkDrawable =  new TextureRegionDrawable(new TextureRegion(
+                            upTexture)
+                    );
+                }else {
+                    checkDrawable =  new TextureRegionDrawable(new TextureRegion(
+                            new Texture(Config.getImageFilePath(check)))
+                    );
+                }
+//                Button.ButtonStyle style = new B/utton.ButtonStyle(upDrawable,downDrawable,checkDrawable);
+                VisImageButton.VisImageButtonStyle visImageButtonStyle = new VisImageButton.VisImageButtonStyle(
+                    upDrawable,downDrawable,checkDrawable,upDrawable,downDrawable,checkDrawable
+                );
+                ((Button) curActor).setStyle(visImageButtonStyle);
+                curActor.setSize(upTexture.getWidth(),upTexture.getHeight());
+                selectedGroup.initLayout();
+            }
         }
     }
 

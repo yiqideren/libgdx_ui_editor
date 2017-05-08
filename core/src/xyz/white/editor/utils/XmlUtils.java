@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.XmlReader;
 import com.kotcrab.vis.ui.widget.VisImageButton;
@@ -58,11 +59,17 @@ public class XmlUtils {
     }
 
     public static void ParseButton(VisImageButton button, XmlReader.Element element){
-        Button.ButtonStyle buttonStyle = new Button.ButtonStyle();
-        buttonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture(Config.getImageFilePath(element.get("up")))));
-        buttonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture(Config.getImageFilePath(element.get("down")))));
-        buttonStyle.checked = new TextureRegionDrawable(new TextureRegion(new Texture(Config.getImageFilePath(element.get("checked")))));
+        String upPath = element.get("up");
+        String downPath = element.get("down");
+        String checkPath = element.get("check");
+        Drawable up = new TextureRegionDrawable(new TextureRegion(new Texture(Config.getImageFilePath(upPath))));
+        Drawable down = new TextureRegionDrawable(new TextureRegion(new Texture(Config.getImageFilePath(downPath))));
+        Drawable checked = new TextureRegionDrawable(new TextureRegion(new Texture(Config.getImageFilePath(checkPath))));
+        VisImageButton.VisImageButtonStyle buttonStyle = new VisImageButton.VisImageButtonStyle(
+                up,down,checked,up,down,checked
+        );
         button.setStyle(buttonStyle);
+        Attr2Button(button,upPath,downPath,checkPath);
     }
 
     public static void Attr2Image(Image image, String imagePath){
@@ -76,6 +83,14 @@ public class XmlUtils {
         hashMap.put("text",label.getText().toString());
         hashMap.put("isWrap",String.valueOf(isWrap));
         label.setUserObject(hashMap);
+    }
+
+    public static void Attr2Button(Button button,String up,String down,String check){
+        HashMap<String,String> hashMap = new HashMap<>();
+        hashMap.put("up",up);
+        hashMap.put("down",down);
+        hashMap.put("check",check);
+        button.setUserObject(hashMap);
     }
 
 }

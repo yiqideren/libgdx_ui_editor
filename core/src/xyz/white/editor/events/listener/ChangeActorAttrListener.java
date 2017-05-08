@@ -37,4 +37,7 @@ public interface ChangeActorAttrListener {
 
     @Subscribe
     void setImagePath(ImagePathEvent event);
+
+    @Subscribe
+    void setButtonPath(ButtonPathEvent event);
 }
