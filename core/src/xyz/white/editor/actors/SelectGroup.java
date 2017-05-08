@@ -44,6 +44,10 @@ public class SelectGroup extends Group {
             Actor lastActor = selection.getLastSelected();
             if (lastActor!=null){
                 EditorManager.getInstance().getEventBus().post(new AttrEvent(lastActor));
+                if (getParent() instanceof MainWindow){
+                    MainWindow mainWindow = (MainWindow) getParent();
+                    if (mainWindow.getEditorLister()!=null) mainWindow.getEditorLister().change();
+                }
             }
         }
     };

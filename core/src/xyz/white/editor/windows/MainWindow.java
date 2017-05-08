@@ -54,13 +54,20 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
     private NativeFont font;
     private SelectGroup selectedGroup = new SelectGroup();
     private FileHandle curSceneFile;
+    private EditorLister editorLister;
+
+    public void setEditorLister(EditorLister editorLister) {
+        this.editorLister = editorLister;
+    }
+
+    public EditorLister getEditorLister() {
+        return editorLister;
+    }
 
     public MainWindow(String title) {
-//        super(title,false);
         setSize(480, 800);
         debug();
         EditorManager.getInstance().getEventBus().register(this);
-//        setBackGround(Color.RED);
         font = EditorManager.getInstance().getMainFont();
         this.addListener(clickListener);
         this.addActor(selectedGroup);
@@ -116,20 +123,10 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
             cloneActor.debug();
             cloneActor.addListener(clickListener);
             EditorManager.getInstance().getEventBus().post(new ActorAddEvent(cloneActor));
+            if (editorLister!=null) editorLister.change();
         }
     }
 
-    private Image back ;
-
-    private void setBackGround(Color color) {
-        Pixmap pixmap = new Pixmap((int) getWidth(), (int) getHeight(), Pixmap.Format.RGB888);
-        pixmap.setColor(color);
-        pixmap.fill();
-        if (back == null){
-            back = new Image(new Texture(pixmap));
-            addActor(back);
-        }
-    }
 
     private ClickListener clickListener = new ClickListener() {
         @Override
@@ -163,6 +160,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
             } else{
                 curActor.setColor(color);
             }
+            if (editorLister!=null) editorLister.change();
         }
     }
 
@@ -172,6 +170,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
         if (curActor != null) {
             curActor.setX(event.x);
             curActor.setY(event.y);
+            if (editorLister!=null) editorLister.change();
         }
         selectedGroup.initLayout();
     }
@@ -184,6 +183,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
                 this.setOrigin(Align.center);
             }
             curActor.setSize(actorSizeEvent.width, actorSizeEvent.height);
+            if (editorLister!=null) editorLister.change();
         }
         selectedGroup.initLayout();
     }
@@ -197,7 +197,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
             }else {
                 curActor.setOrigin(actorOriginEvent.align);
             }
-
+            if (editorLister!=null) editorLister.change();
         }
     }
 
@@ -207,6 +207,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
         if (curActor != null) {
             if (curActor instanceof Label) {
                 ((Label) curActor).setText(actorTextEvent.msg);
+                if (editorLister!=null) editorLister.change();
             }
         }
     }
@@ -217,7 +218,9 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
         if (curActor != null) {
             if (curActor instanceof Label) {
                 ((Label) curActor).setWrap(labelWrapEvent.isWrap);
+                if (editorLister!=null) editorLister.change();
             }
+
         }
     }
 
@@ -228,6 +231,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
             if (curActor instanceof Label) {
                 ((Label) curActor).setAlignment(alignEvent.align);
             }
+            if (editorLister!=null) editorLister.change();
         }
     }
 
@@ -237,6 +241,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
         Actor curActor = selectedGroup.getLastSelectActor();
         if (curActor != null) {
             curActor.setRotation(rotation);
+            if (editorLister!=null) editorLister.change();
         }
     }
 
@@ -250,6 +255,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
             ));
             curActor.setSize(source.getWidth(),source.getHeight());
             selectedGroup.initLayout();
+            if (editorLister!=null) editorLister.change();
         }
     }
 
@@ -293,6 +299,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
                 ((Button) curActor).setStyle(visImageButtonStyle);
                 curActor.setSize(upTexture.getWidth(),upTexture.getHeight());
                 selectedGroup.initLayout();
+                if (editorLister!=null) editorLister.change();
             }
         }
     }
@@ -309,6 +316,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
     @Override
     public void cancelActor(TreeCancelEvent event) {
         selectedGroup.clearAllActor();
+        if (editorLister!=null) editorLister.change();
     }
 
     @Override
@@ -322,6 +330,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
             parentGroup.stageToLocalCoordinates(vector2);
             parentGroup.addActor(actor);
             actor.setPosition(vector2.x,vector2.y);
+            if (editorLister!=null) editorLister.change();
         }
     }
 
@@ -344,9 +353,15 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
         if (this.curSceneFile!=null){
             try {
                 FileUtils.WriteFile(MainWindow.this,this.curSceneFile);
+                if (editorLister!=null) editorLister.save();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public interface EditorLister{
+        void change();
+        void save();
     }
 }

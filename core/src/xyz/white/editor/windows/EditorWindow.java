@@ -18,6 +18,7 @@ import xyz.white.editor.Config;
 public class EditorWindow extends VisWindow {
     private MainWindow mainWindow;
     private Group group;
+    private boolean isChange = false;
 
     public EditorWindow(final MainWindow mainWindow) {
         super("Editor",false);
@@ -57,6 +58,24 @@ public class EditorWindow extends VisWindow {
                     group.moveBy(x-getTouchDownX(), y-getTouchDownY());
                 }
                 super.drag(event, x, y, pointer);
+            }
+        });
+
+        mainWindow.setEditorLister(new MainWindow.EditorLister() {
+            @Override
+            public void change() {
+                if (!isChange){
+                    isChange = true;
+                    getTitleLabel().setText("*Editor");
+                }
+            }
+
+            @Override
+            public void save() {
+                if (isChange){
+                    isChange = false;
+                    getTitleLabel().setText("Editor");
+                }
             }
         });
     }
