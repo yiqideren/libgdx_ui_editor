@@ -287,7 +287,6 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
                             new Texture(Config.getImageFilePath(check)))
                     );
                 }
-//                Button.ButtonStyle style = new B/utton.ButtonStyle(upDrawable,downDrawable,checkDrawable);
                 VisImageButton.VisImageButtonStyle visImageButtonStyle = new VisImageButton.VisImageButtonStyle(
                     upDrawable,downDrawable,checkDrawable,upDrawable,downDrawable,checkDrawable
                 );
