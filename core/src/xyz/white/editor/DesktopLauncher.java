@@ -1,9 +1,7 @@
-package xyz.white.editor.desktop;
+package xyz.white.editor;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-
-import xyz.white.editor.MainEditor;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
