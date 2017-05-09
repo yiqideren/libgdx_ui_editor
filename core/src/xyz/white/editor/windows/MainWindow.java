@@ -401,7 +401,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
                         actor.setPosition(vector2.x+tmp.getWidth(),actor.getY()+actor.getHeight()/2,Align.right);
                         break;
                     case Align.center:
-                        actor.setPosition(vector2.x+tmp.getWidth()/2,vector2.y+tmp.getHeight()/2,Align.center);
+                        actor.setPosition(vector2.x+tmp.getWidth()/2,actor.getY(Align.center),Align.center);
                         break;
                 }
             }
