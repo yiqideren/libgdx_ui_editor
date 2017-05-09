@@ -55,6 +55,22 @@ public class AttrGeneralWindow extends VisWindow {
         yTextField.setTextFieldFilter(new DigitsFieldFilter());
         generalTable.add(yTextField).expand().width(getWidth()*0.3f).left();
         generalTable.row();
+        final VisSelectBox<String> selectPosBox = new VisSelectBox<String>();
+        selectPosBox.setItems(Config.alignstrs);
+        selectPosBox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                String alignStr = selectPosBox.getSelected();
+                if (Config.aligns.containsKey(alignStr)) {
+                    float x = Float.valueOf(xTextField.getText().isEmpty()?"0":xTextField.getText());
+                    float y = Float.valueOf(yTextField.getText().isEmpty()?"0":yTextField.getText());
+                    EditorManager.getInstance().getEventBus().post(new ActorPosChangeEvent(x,y,Config.aligns.get(alignStr)));
+                }
+            }
+        });
+        generalTable.add();
+        generalTable.add(selectPosBox).width(getWidth()*0.3f).left();
+        generalTable.row();
 
         generalTable.add(new VisLabel("OrginX"));
         orignXTextField = new VisTextField();

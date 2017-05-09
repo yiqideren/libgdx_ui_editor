@@ -34,6 +34,10 @@ public class EditorManager {
 
         assetManager = new AssetManager();
         assetManager.load("badlogic.jpg", Texture.class);
+        assetManager.load("icon/select.9.png",Texture.class);
+        assetManager.load("icon/align_left.png",Texture.class);
+        assetManager.load("icon/align_right.png",Texture.class);
+        assetManager.load("icon/align_center.png",Texture.class);
         assetManager.finishLoading();
     }
 

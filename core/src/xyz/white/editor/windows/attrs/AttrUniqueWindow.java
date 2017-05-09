@@ -83,13 +83,13 @@ public class AttrUniqueWindow extends VisWindow {
         });
 
         final VisSelectBox<String> selectBox = new VisSelectBox<String>();
-        selectBox.setItems(alignstrs);
+        selectBox.setItems(Config.alignstrs);
         selectBox.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 String alignStr = selectBox.getSelected();
-                if (aligns.containsKey(alignStr)) {
-                    EditorManager.getInstance().getEventBus().post(new ActorAlignEvent(aligns.get(alignStr)));
+                if (Config.aligns.containsKey(alignStr)) {
+                    EditorManager.getInstance().getEventBus().post(new ActorAlignEvent(Config.aligns.get(alignStr)));
                 }
             }
         });

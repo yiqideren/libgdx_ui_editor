@@ -1,10 +1,17 @@
 package xyz.white.editor.actors;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.Selection;
 import com.badlogic.gdx.utils.Array;
 import xyz.white.editor.EditorManager;
@@ -17,17 +24,21 @@ import xyz.white.editor.windows.MainWindow;
  */
 public class SelectGroup extends Group {
     private Selection<Actor> selection;
+    private Drawable cubDra;
+    private Rectangle cubRect,childRect;
 
     public SelectGroup(){
+        cubRect = new Rectangle();
+        childRect = new Rectangle();
+        setCullingArea(cubRect);
+        cubDra = getRectLineDrawable();
         selection = new Selection<Actor>();
-        debugAll();
         addListener(dragListener);
     }
 
     private DragListener dragListener = new DragListener(){
         @Override
         public void drag(InputEvent event, float x, float y, int pointer) {
-            super.drag(event, x, y, pointer);
             if (pointer == -1) return;
             Actor actor = event.getListenerActor();
             actor.moveBy(x - getTouchDownX(), y - getTouchDownY());
@@ -52,6 +63,27 @@ public class SelectGroup extends Group {
         }
     };
 
+    public void setDragBounds(float x, float y, float width, float height) {
+        setBounds(x, y, width, height);
+        getCullingArea().set(width<0?x+width:x,height<0?y+height:y,Math.abs(width),Math.abs(height));
+        MainWindow mainWindow = (MainWindow) this.getParent();
+        for (Actor child:mainWindow.getChildren()){
+            if (child instanceof SelectGroup) continue;
+
+            childRect.set(child.getX(),child.getY(),child.getWidth(),child.getHeight());
+            if (getCullingArea().overlaps(childRect)){
+                if (!selection.contains(child)){
+                    child.debug();
+                    selection.add(child);
+                }
+            }else if (selection.contains(child)){
+                selection.remove(child);
+                child.setDebug(false);
+            }
+        }
+        setZIndex(100);
+
+    }
 
     public void clearAllActor(){
         for (Actor actor:getAllActor()){
@@ -127,10 +159,31 @@ public class SelectGroup extends Group {
                 }
 
             }
-            this.setBounds(x1,y1,x2 - x1,y2 - y1);
+            SelectGroup.this.setBounds(x1,y1,x2 - x1,y2 - y1);
 
         }
 
+    }
+
+    @Override
+    public void act(float delta) {
+
+        super.act(delta);
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        cubDra.draw(batch,getX(),getY(),getWidth(),getHeight());
+        super.draw(batch, parentAlpha);
+    }
+
+
+    // 创建钜形线条Drawable
+    public Drawable getRectLineDrawable() {
+        NinePatchDrawable nine = new NinePatchDrawable(new NinePatch(
+                EditorManager.getInstance().assetManager.get("icon/select.9.png",Texture.class),
+                2,2, 2, 2));
+        return nine;
     }
 
     public int getSelectedActorSize(){

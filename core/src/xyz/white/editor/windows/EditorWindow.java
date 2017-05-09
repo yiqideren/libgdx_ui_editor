@@ -2,14 +2,22 @@ package xyz.white.editor.windows;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisWindow;
+import org.lwjgl.openal.AL;
 import xyz.white.editor.Config;
+import xyz.white.editor.EditorManager;
+import xyz.white.editor.events.shortcut.AlignEvent;
 
 /**
  * Created by 10037 on 2017/4/16 0016.
@@ -17,6 +25,7 @@ import xyz.white.editor.Config;
 
 public class EditorWindow extends VisWindow {
     private MainWindow mainWindow;
+    private VisTable shortcutTable;
     private Group group;
     private boolean isChange = false;
 
@@ -26,12 +35,13 @@ public class EditorWindow extends VisWindow {
         setSize(Config.width * 0.6f, Config.height * 0.7f);
         group = new Group();
         group.setSize(mainWindow.getWidth(),mainWindow.getHeight());
+        group.setPosition(getWidth()/2,getHeight()/2,Align.center);
         group.addActor(mainWindow);
-        final VisTable table = new VisTable();
-        table.add(group);
 
-        table.setPosition(getWidth()/2,getHeight()/2,Align.center);
-        add(group).expand().fill();
+        initShortCutTable();
+
+
+        addActor(group);
         EditorWindow.this.addListener(new InputListener() {
 
             @Override
@@ -63,6 +73,11 @@ public class EditorWindow extends VisWindow {
 
         mainWindow.setEditorLister(new MainWindow.EditorLister() {
             @Override
+            public void loadScene() {
+                group.setPosition(EditorWindow.this.getWidth()/2,EditorWindow.this.getHeight()/2,Align.center);
+            }
+
+            @Override
             public void change() {
                 if (!isChange){
                     isChange = true;
@@ -79,5 +94,42 @@ public class EditorWindow extends VisWindow {
             }
         });
     }
+
+
+    private void initShortCutTable(){
+        shortcutTable = new VisTable();
+        VisImageButton alignLeftBtn = new VisImageButton(new TextureRegionDrawable(new TextureRegion(
+                EditorManager.getInstance().assetManager.get("icon/align_left.png",Texture.class)
+        )));
+        alignLeftBtn.setUserObject(Align.left);
+        VisImageButton alignRightBtn = new VisImageButton(new TextureRegionDrawable(new TextureRegion(
+                EditorManager.getInstance().assetManager.get("icon/align_right.png",Texture.class)
+        )));
+        alignRightBtn.setUserObject(Align.right);
+        VisImageButton alignCenterBtn = new VisImageButton(new TextureRegionDrawable(new TextureRegion(
+                EditorManager.getInstance().assetManager.get("icon/align_center.png",Texture.class)
+        )));
+        alignCenterBtn.setUserObject(Align.center);
+
+        alignLeftBtn.addListener(alignClickListener);
+        alignRightBtn.addListener(alignClickListener);
+        alignCenterBtn.addListener(alignClickListener);
+
+        shortcutTable.add(alignLeftBtn);
+        shortcutTable.row();
+        shortcutTable.add(alignRightBtn).spaceTop(10);
+        shortcutTable.row();
+        shortcutTable.add(alignCenterBtn).spaceTop(10);
+        this.add(shortcutTable).expand().left().padLeft(10).top().padTop(10);
+    }
+
+    private ClickListener alignClickListener = new ClickListener(){
+        @Override
+        public void clicked(InputEvent event, float x, float y) {
+            int align = (int) event.getListenerActor().getUserObject();
+            EditorManager.getInstance().getEventBus().post(new AlignEvent(align));
+            super.clicked(event, x, y);
+        }
+    };
 
 }

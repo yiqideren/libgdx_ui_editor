@@ -16,7 +16,7 @@ import xyz.white.editor.windows.attrs.AttrWindow;
  * Created by 10037 on 2017/4/18 0018.
  */
 public class MainStage extends Stage {
-    final Pixmap pm = new Pixmap(Gdx.files.internal("icon/hand.png"));
+    final Pixmap pm = new Pixmap(Gdx.files.internal("icon/cross.png"));
     private MainWindow mainWindow;
 
     public MainStage(Viewport viewport){
@@ -79,6 +79,7 @@ public class MainStage extends Stage {
     @Override
     public void dispose() {
         pm.dispose();
+        EditorManager.getInstance().assetManager.dispose();
         super.dispose();
     }
 

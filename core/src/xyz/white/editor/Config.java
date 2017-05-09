@@ -53,12 +53,13 @@ public  class Config {
             }
             stringBuilder.append(path==null?"":path);
             String imagePath = stringBuilder.toString();
-            Gdx.app.log("imagePath",imagePath);
             FileHandle fileHandle = new FileHandle(imagePath);
-            if (fileHandle.exists() || fileHandle.file().isFile())
+            if (fileHandle.exists() && fileHandle.file().isFile()){
                 return fileHandle;
-            else
+            } else{
                 return Gdx.files.internal("badlogic.jpg");
+            }
+
 
         }
         return null;
