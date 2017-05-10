@@ -9,7 +9,7 @@ A game ui editor for libgdx
  
   *First, click "File" in the upper left corner and click "Open Project"  
   *Then, in the bottom of the resource window, right-click New Scene, create a **.vwx file,double-click it.  
-  *Final, Enjoy!
+  *Final, A Simple Example is [here](/editor_runtime/src/xyz/white/runtime/TestGame.java)
 
 ### Shortcuts  
 *Space + wheel -- Zoom the edit window  

@@ -41,7 +41,14 @@ public  class Config {
 
     public static String getProjectPath(){
         Preferences preferences = Gdx.app.getPreferences("white-projectPath");
-        return preferences.getString("project","");
+        String path = preferences.getString("project","");
+        StringBuilder stringBuilder =  new StringBuilder();
+        stringBuilder.append(path);
+        if (!path.endsWith("/")){
+            stringBuilder.append("/");
+        }
+
+        return stringBuilder.toString();
     }
 
     public static FileHandle getImageFilePath(String path){

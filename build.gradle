@@ -51,6 +51,19 @@ project(":editor") {
     }
 }
 
+project(":editor_runtime"){
+    apply plugin: "java"
+
+    dependencies {
+        compile 'com.github.tianqiujie:nativefont:2.5.0'
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    }
+}
+
 tasks.eclipse.doLast {
     delete ".project"
 }

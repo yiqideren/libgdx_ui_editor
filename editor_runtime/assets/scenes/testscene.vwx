@@ -1,0 +1,4 @@
+<Stage width="480.0" height="800.0" x="0.0" y="0.0" originX="0.0" originY="0.0" visible="true" name="testscene">
+	<Image width="363.0" height="178.0" x="69.0" y="371.99997" originX="0.0" originY="0.0" visible="true" image="Button_01.png"/>
+	<Label width="44.0" height="30.0" x="185.0" y="313.0" originX="0.0" originY="0.0" visible="true" text="TestLabel" isWrap="false"/>
+</Stage>
