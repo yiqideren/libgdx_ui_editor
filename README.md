@@ -7,8 +7,10 @@ A game ui editor for libgdx
 ### Documentation
  Usage is very simple  
  
-  *First, click "File" in the upper left corner and click "Open Project"  
-  *Then, in the bottom of the resource window, right-click New Scene, create a **.vwx file,double-click it.  
+  *First, click "File" in the upper left corner and click ["Open Project"](screenshoot/open.gif)  
+   
+  *Then, in the bottom of the resource window, right-click New Scene, create a **.vwx file,double-click [it](screenshoot/newScene.gif).  
+    
   *Final, A Simple Example is [here](/editor_runtime/src/xyz/white/runtime/TestGame.java)
 
 ### Shortcuts  
@@ -25,4 +27,4 @@ A game ui editor for libgdx
 
 *[VisUI](https://github.com/kotcrab/vis-editor/wiki/VisUI) -- a UI Library  
 
-![editor](screen.gif)
+![editor](screenshoot/screen.gif)
