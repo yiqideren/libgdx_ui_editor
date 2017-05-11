@@ -18,6 +18,9 @@ A game ui editor for libgdx
 * Space + Left  -- Move the edit window  
 * Mouse Right   -- Multiple choice actors
 
+### Blog
+* http://www.whitecostume.xyz
+
 ### Next
    * More shortcuts  
    * More Actor are supported
