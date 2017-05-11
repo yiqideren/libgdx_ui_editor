@@ -34,36 +34,34 @@ import java.io.IOException;
  * Created by 10037 on 2017/4/23 0023.
  */
 public class AssetWindow extends VisTable implements ApplicationEventListener {
-    private VisTable contentTable,toobarTable;
     private GridGroup filesView;
     private FileHandle curFileHandle;
     private Label fileNameLabel;
-    private AssetPopupMenu rightMenu;
 
     public AssetWindow() {
         setBackground("window-bg");
-        setSize(Config.width*0.6f,Config.height*0.3f);
+        setSize(Config.width * 0.6f, Config.height * 0.3f);
         EditorManager.getInstance().getEventBus().register(this);
         init();
     }
 
-    private void init(){
+    private void init() {
 
-        toobarTable = new VisTable(true);
+        VisTable toobarTable = new VisTable(true);
         VisImageButton preImage = new VisImageButton(VisUI.getSkin().getDrawable("icon-folder-parent"),
                 "Previous Directory");
-        VisImageButton createDirImage = new VisImageButton(VisUI.getSkin().getDrawable("icon-folder-new"),"Create A New Directory");
+        VisImageButton createDirImage = new VisImageButton(VisUI.getSkin().getDrawable("icon-folder-new"), "Create A New Directory");
 
-        fileNameLabel = new NativeLabel("",EditorManager.getInstance().getMainFont());
+        fileNameLabel = new NativeLabel("", EditorManager.getInstance().getMainFont());
 
         toobarTable.add(preImage).expandX().left().padLeft(10);
         toobarTable.add(createDirImage).expandX().left().padLeft(5);
         toobarTable.addSeparator(true).expandX().left().padLeft(4);
         toobarTable.add(fileNameLabel).width(650).expandX().left().padLeft(4);
-        preImage.addListener(new ClickListener(){
+        preImage.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (curFileHandle!=null ){
+                if (curFileHandle != null) {
                     load(curFileHandle.parent().path());
 
                 }
@@ -71,15 +69,15 @@ public class AssetWindow extends VisTable implements ApplicationEventListener {
             }
         });
 
-        createDirImage.addListener(new ClickListener(){
+        createDirImage.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (curFileHandle!=null){
+                if (curFileHandle != null) {
                     Dialogs.showInputDialog(getStage(), FileChooserText.NEW_DIRECTORY_DIALOG_TITLE.get(), FileChooserText.NEW_DIRECTORY_DIALOG_TEXT.get(), true, new InputDialogAdapter() {
                         @Override
-                        public void finished (String input) {
+                        public void finished(String input) {
                             FileHandle currentDirectory = curFileHandle;
-                            if (!currentDirectory.isDirectory()){
+                            if (!currentDirectory.isDirectory()) {
                                 currentDirectory = currentDirectory.parent();
                             }
                             if (FileUtils.isValidFileName(input) == false) {
@@ -104,7 +102,7 @@ public class AssetWindow extends VisTable implements ApplicationEventListener {
             }
         });
 
-        rightMenu = new AssetPopupMenu();
+        AssetPopupMenu rightMenu = new AssetPopupMenu();
         rightMenu.addItem(new MenuItem("New Scene", new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -128,11 +126,11 @@ public class AssetWindow extends VisTable implements ApplicationEventListener {
             }
         }));
 
-        filesView = new GridGroup(80,4);
+        filesView = new GridGroup(80, 4);
         final VisScrollPane scrollPane = new VisScrollPane(filesView);
         scrollPane.setFadeScrollBars(false);
-        scrollPane.setScrollingDisabled(true,false);
-        contentTable = new VisTable(true);
+        scrollPane.setScrollingDisabled(true, false);
+        VisTable contentTable = new VisTable(true);
         filesView.debug();
 
         scrollPane.addListener(rightMenu.getDefaultInputListener());
@@ -145,35 +143,35 @@ public class AssetWindow extends VisTable implements ApplicationEventListener {
 
 
         String path = Config.getProjectPath();
-        if (path!=null&&!path.isEmpty()){
+        if (path != null && !path.isEmpty()) {
             load(path);
         }
     }
 
-    private void load(String path){
+    private void load(String path) {
         filesView.clearChildren();
         filesView.layout();
-        FileHandle file =Gdx.files.absolute(path);
+        FileHandle file = Gdx.files.absolute(path);
         curFileHandle = file;
-        if (file.isDirectory()){
-            for (FileHandle child :file.list()){
+        if (file.isDirectory()) {
+            for (FileHandle child : file.list()) {
                 if (child.name().startsWith(".")) continue;
                 loadAsset(child);
             }
-        }else {
+        } else {
             loadAsset(file);
         }
     }
 
-    private ClickListener fileClickListener = new ClickListener(){
+    private ClickListener fileClickListener = new ClickListener() {
         @Override
         public void clicked(InputEvent event, float x, float y) {
-            if (event.getListenerActor() instanceof FileItem){
+            if (event.getListenerActor() instanceof FileItem) {
                 FileItem item = (FileItem) event.getListenerActor();
-                if (getTapCount() == 2){
+                if (getTapCount() == 2) {
                     if (item.getFile().isDirectory()) {
                         AssetWindow.this.load(item.getFile().path());
-                    }else if (item.getFile().extension().equals(Config.sceneExtension)){
+                    } else if (item.getFile().extension().equals(Config.sceneExtension)) {
                         EditorManager.getInstance().getEventBus().post(new LoadSceneEvent(item.getFile()));
                     }
                 }
@@ -184,7 +182,7 @@ public class AssetWindow extends VisTable implements ApplicationEventListener {
         }
     };
 
-    private void loadAsset(FileHandle file){
+    private void loadAsset(FileHandle file) {
         FileItem fileItem = new FileItem(file);
         fileItem.addListener(fileClickListener);
         filesView.addActor(fileItem);
@@ -192,27 +190,25 @@ public class AssetWindow extends VisTable implements ApplicationEventListener {
 
 
     @Override
-    public void LoadProject(LoadProjectEvent event) {
+    public void loadProject(LoadProjectEvent event) {
         String projectPath = Config.getProjectPath();
-        if (!projectPath.isEmpty()){
+        if (!projectPath.isEmpty()) {
             load(projectPath);
         }
     }
 
-    private class AssetPopupMenu extends PopupMenu{
+    private class AssetPopupMenu extends PopupMenu {
 
 
-        public void build(FileItem fileItem){
+        public void build(FileItem fileItem) {
             clearChildren();
-            if (fileItem == null){
+            if (fileItem == null) {
                 addItem(new MenuItem("New Scene", new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
 
                     }
                 }));
-            }else {
-
             }
         }
     }

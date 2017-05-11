@@ -5,7 +5,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -20,34 +19,34 @@ import java.io.IOException;
  * Created by 10037 on 2017/5/10 0010.
  */
 public class XmlUtils {
-    public static void ReadFile(Group group, FileHandle fileHandle) throws IOException {
+    public static void readFile(Group group, FileHandle fileHandle) throws IOException {
         XmlReader xmlReader = new XmlReader();
         XmlReader.Element element = xmlReader.parse(fileHandle);
-        ReadAttr(group,element);
+        readAttr(group,element);
     }
 
-    public static void ReadAttr(Group parentGroup, XmlReader.Element element){
+    public static void readAttr(Group parentGroup, XmlReader.Element element){
         if (element.getName().equals("Stage")){
-            XmlUtils.ParseGenAttr(parentGroup,element);
+            XmlUtils.parseGenAttr(parentGroup,element);
             if (element.getChildCount()>0){
                 for (int i = 0;i<element.getChildCount();i++){
-                    ReadAttr(parentGroup,element.getChild(i));
+                    readAttr(parentGroup,element.getChild(i));
                 }
             }
         }else if (element.getName().equals("Group")){
             Group group = new Group();
-            XmlUtils.ParseGenAttr(group,element);
+            XmlUtils.parseGenAttr(group,element);
             parentGroup.addActor(group);
             if (element.getChildCount()>0){
                 for (int i = 0;i<element.getChildCount();i++){
-                    ReadAttr(group,element.getChild(i));
+                    readAttr(group,element.getChild(i));
                 }
             }
         }else {
             Actor actor = getActorByName(element.getName());
             parentGroup.addActor(actor);
-            XmlUtils.ParseGenAttr(actor,element);
-            XmlUtils.ParseUqAttr(actor,element);
+            XmlUtils.parseGenAttr(actor,element);
+            XmlUtils.parseUqAttr(actor,element);
         }
 
     }
@@ -71,7 +70,7 @@ public class XmlUtils {
         }
     }
 
-    public static void ParseGenAttr(Actor actor, XmlReader.Element element){
+    public static void parseGenAttr(Actor actor, XmlReader.Element element){
         actor.setWidth(element.getFloat("width",100));
         actor.setHeight(element.getFloat("height",100));
         actor.setPosition(element.getFloat("x",0),element.getFloat("y",0));
@@ -97,26 +96,26 @@ public class XmlUtils {
             return Actor.class;
         }
     }
-    public static void ParseUqAttr(Actor actor, XmlReader.Element element){
+    public static void parseUqAttr(Actor actor, XmlReader.Element element){
         Class cls  = getActorType(actor);
         if (cls.equals(Label.class)){
-            ParseLabel((Label) actor,element);
+            parseLabel((Label) actor,element);
         }else if (cls.equals(Image.class)){
-            ParseImage((Image) actor,element);
+            parseImage((Image) actor,element);
         }else if (cls.equals(Button.class)){
-            ParseButton((Button) actor,element);
+            parseButton((Button) actor,element);
         }else if (cls.equals(TextField.class)){
-            ParseTextField((TextField) actor,element);
+            parseTextField((TextField) actor,element);
         }
     }
 
-    public static void ParseLabel(Label label, XmlReader.Element element){
+    public static void parseLabel(Label label, XmlReader.Element element){
         boolean isWrap = element.getBoolean("isWrap",false);
         label.setWrap(isWrap);
         label.setText(element.get("text",""));
     }
 
-    public static void ParseImage(Image image, XmlReader.Element element){
+    public static void parseImage(Image image, XmlReader.Element element){
         String imagePath = element.get("image","");
         image.setDrawable(new TextureRegionDrawable(new TextureRegion(
                 new Texture(Gdx.files.internal(imagePath))
@@ -124,7 +123,7 @@ public class XmlUtils {
 
     }
 
-    public static void ParseButton(Button button, XmlReader.Element element){
+    public static void parseButton(Button button, XmlReader.Element element){
         String upPath = element.get("up");
         String downPath = element.get("down");
         String checkPath = element.get("check");
@@ -135,7 +134,7 @@ public class XmlUtils {
         button.setStyle(buttonStyle);
     }
 
-    public static void ParseTextField(TextField textField, XmlReader.Element element){
+    public static void parseTextField(TextField textField, XmlReader.Element element){
         String text = element.get("text","");
         String messageText = element.get("messageText","");
         textField.setText(text);

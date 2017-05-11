@@ -1,6 +1,5 @@
 package xyz.white.editor.windows;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 
@@ -23,7 +21,6 @@ import net.mwplay.nativefont.NativeFont;
 import net.mwplay.nativefont.NativeLabel;
 
 
-import org.lwjgl.openal.AL;
 import xyz.white.editor.Config;
 import xyz.white.editor.EditorManager;
 import xyz.white.editor.actors.SelectGroup;
@@ -394,7 +391,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
             MainWindow.this.clearChildren();
             selectedGroup.clearAllActor();
             MainWindow.this.addActor(selectedGroup);
-            FileUtils.ReadFile(MainWindow.this, event.sceneFile, clickListener);
+            FileUtils.readFile(MainWindow.this, event.sceneFile, clickListener);
             EditorManager.getInstance().getEventBus().post(new RefreshWindowEvent(MainWindow.this));
             if (editorLister != null) editorLister.loadScene();
             EditorManager.getInstance().clearEvents();
@@ -406,7 +403,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
     public void saveScene() {
         if (this.curSceneFile != null) {
             try {
-                FileUtils.WriteFile(MainWindow.this, this.curSceneFile);
+                FileUtils.writeFile(MainWindow.this, this.curSceneFile);
                 if (editorLister != null) editorLister.save();
             } catch (IOException e) {
                 e.printStackTrace();

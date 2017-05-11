@@ -232,7 +232,7 @@ public class TreeWindow extends VisWindow implements EditorEventListener,KeyBoar
 
 
     @Override
-    public void key_del(KeyDelEvent event) {
+    public void keyDel(KeyDelEvent event) {
         if (tree.getSelection().size()>0){
             for (Tree.Node node : tree.getSelection().items()){
                 if (node.getObject() instanceof Actor){

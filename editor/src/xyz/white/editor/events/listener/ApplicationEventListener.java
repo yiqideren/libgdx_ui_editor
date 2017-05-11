@@ -9,5 +9,5 @@ import xyz.white.editor.events.application.LoadProjectEvent;
 public interface ApplicationEventListener {
 
     @Subscribe
-    void LoadProject(LoadProjectEvent event);
+    void loadProject(LoadProjectEvent event);
 }

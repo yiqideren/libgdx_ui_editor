@@ -72,14 +72,14 @@ public class AttrUniqueWindow extends VisWindow {
             @Override
             public void keyTyped(TextField textField, char c) {
                 EditorManager.getInstance().getEventBus().post(new ActorTextEvent(textField.getText(), c));
-                XmlUtils.Attr2Label(label, checkBox_wrap.isChecked());
+                XmlUtils.attr2Label(label, checkBox_wrap.isChecked());
             }
         });
         checkBox_wrap.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 EditorManager.getInstance().getEventBus().post(new LabelWrapEvent(checkBox_wrap.isChecked()));
-                XmlUtils.Attr2Label(label, checkBox_wrap.isChecked());
+                XmlUtils.attr2Label(label, checkBox_wrap.isChecked());
             }
         });
 
@@ -130,7 +130,7 @@ public class AttrUniqueWindow extends VisWindow {
                     String path = files.get(0).path().replace(Config.getProjectPath(), "");
                     pathTextField.setText(path);
                     EditorManager.getInstance().getEventBus().post(new ImagePathEvent(path));
-                    XmlUtils.Attr2Image(image, path);
+                    XmlUtils.attr2Image(image, path);
                 }
             }
 
@@ -197,7 +197,7 @@ public class AttrUniqueWindow extends VisWindow {
                     }
                     EditorManager.getInstance().getEventBus().post(new ButtonPathEvent(
                             upTextField.getText(), downTextField.getText(), checkTextField.getText()));
-                    XmlUtils.Attr2Button(button, upTextField.getText(), downTextField.getText(), checkTextField.getText());
+                    XmlUtils.attr2Button(button, upTextField.getText(), downTextField.getText(), checkTextField.getText());
                 }
             }
 
@@ -256,7 +256,7 @@ public class AttrUniqueWindow extends VisWindow {
             @Override
             public void keyTyped(TextField listenerText, char c) {
                 EditorManager.getInstance().getEventBus().post(new TextFieldTextEvent(listenerText.getText(),messageTextField.getText()));
-                XmlUtils.Attr2TextField(textField);
+                XmlUtils.attr2TextField(textField);
             }
         });
 
@@ -265,7 +265,7 @@ public class AttrUniqueWindow extends VisWindow {
             @Override
             public void keyTyped(TextField listenerText, char c) {
                 EditorManager.getInstance().getEventBus().post(new TextFieldTextEvent(contextTextField.getText(),messageTextField.getText()));
-                XmlUtils.Attr2TextField(textField);
+                XmlUtils.attr2TextField(textField);
             }
         });
 

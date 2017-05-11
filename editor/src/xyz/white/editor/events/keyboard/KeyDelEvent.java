@@ -7,9 +7,6 @@ import xyz.white.editor.events.Event;
  */
 public class KeyDelEvent implements Event {
 
-    public KeyDelEvent(){
-
-    }
 
     @Override
     public Event redo() {

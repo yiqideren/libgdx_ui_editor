@@ -8,8 +8,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kotcrab.vis.ui.VisUI;
 
 public class MainEditor extends ApplicationAdapter {
-	MainStage mainStage;
-	Viewport mainViewPort;
+	private MainStage mainStage;
+	private Viewport mainViewPort;
 
 	@Override
 	public void create () {

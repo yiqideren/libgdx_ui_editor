@@ -16,7 +16,7 @@ public class StageLoad {
         if (sceneFile.exists()){
             Gdx.app.log("oeifoef","111111");
             try {
-                XmlUtils.ReadFile(parentGroup,sceneFile);
+                XmlUtils.readFile(parentGroup,sceneFile);
                 Gdx.app.log("oeifoef","000000");
             } catch (IOException e) {
                 e.printStackTrace();

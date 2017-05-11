@@ -15,7 +15,6 @@ import xyz.white.editor.windows.dialogs.NewProjectDialog;
  * Created by 10037 on 2017/4/27 0027.
  */
 public class MenuBarWindow extends VisTable {
-    private MenuBar menuBar;
 
     public MenuBarWindow() {
         super();
@@ -25,7 +24,7 @@ public class MenuBarWindow extends VisTable {
     }
 
     private void init(){
-        menuBar = new MenuBar();
+        MenuBar menuBar = new MenuBar();
         initFileMenu(menuBar);
 
         add(menuBar.getTable());

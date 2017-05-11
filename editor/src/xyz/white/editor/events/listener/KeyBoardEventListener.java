@@ -9,6 +9,6 @@ import xyz.white.editor.events.keyboard.KeyDelEvent;
  */
 public interface KeyBoardEventListener {
     @Subscribe
-    void key_del(KeyDelEvent event);
+    void keyDel(KeyDelEvent event);
 
 }

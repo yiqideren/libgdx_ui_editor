@@ -1,19 +1,11 @@
 package xyz.white.editor.utils;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlWriter;
-import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.VisImageButton;
-import com.kotcrab.vis.ui.widget.VisWindow;
-import net.mwplay.nativefont.NativeLabel;
 import xyz.white.editor.EditorManager;
 import xyz.white.editor.actors.SelectGroup;
 import xyz.white.editor.windows.MainWindow;
@@ -38,42 +30,42 @@ public class FileUtils {
         xmlWriter.flush();
     }
 
-    public static void ReadFile(Group group, FileHandle fileHandle, EventListener dragListener) throws IOException {
+    public static void readFile(Group group, FileHandle fileHandle, EventListener dragListener) throws IOException {
         XmlReader xmlReader = new XmlReader();
         XmlReader.Element element = xmlReader.parse(fileHandle);
-        ReadAttr(group,element,dragListener);
+        readAttr(group,element,dragListener);
     }
 
-    public static void ReadAttr(Group parentGroup, XmlReader.Element element,EventListener dragListener){
+    public static void readAttr(Group parentGroup, XmlReader.Element element, EventListener dragListener){
         if (element.getName().equals("Stage")){
-            XmlUtils.ParseGenAttr(parentGroup,element);
+            XmlUtils.parseGenAttr(parentGroup,element);
             if (element.getChildCount()>0){
                 for (int i = 0;i<element.getChildCount();i++){
-                    ReadAttr(parentGroup,element.getChild(i),dragListener);
+                    readAttr(parentGroup,element.getChild(i),dragListener);
                 }
             }
         }else if (element.getName().equals("Group")){
             Group group = new Group();
-            XmlUtils.ParseGenAttr(group,element);
+            XmlUtils.parseGenAttr(group,element);
             group.addListener(dragListener);
             parentGroup.addActor(group);
            if (element.getChildCount()>0){
                for (int i = 0;i<element.getChildCount();i++){
-                   ReadAttr(group,element.getChild(i),dragListener);
+                   readAttr(group,element.getChild(i),dragListener);
                }
            }
         }else {
             Actor actor = EditorManager.getInstance().getActorByName(element.getName());
             parentGroup.addActor(actor);
             actor.addListener(dragListener);
-            XmlUtils.ParseGenAttr(actor,element);
-            XmlUtils.ParseUqAttr(actor,element);
+            XmlUtils.parseGenAttr(actor,element);
+            XmlUtils.parseUqAttr(actor,element);
         }
 
     }
 
 
-    public static void WriteFile(Group group,FileHandle fileHandle) throws IOException {
+    public static void writeFile(Group group, FileHandle fileHandle) throws IOException {
         FileWriter writer = new FileWriter(fileHandle.file());
         XmlWriter xmlWriter= new XmlWriter(writer);
         writeAttr(xmlWriter,group);
