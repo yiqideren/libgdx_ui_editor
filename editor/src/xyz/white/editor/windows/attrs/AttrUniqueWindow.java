@@ -152,8 +152,7 @@ public class AttrUniqueWindow extends VisWindow {
     }
 
 
-    public void initButtonAttr(final Button button, VisTable uniqueTable) {
-        final int checkType = 0;
+    private void initButtonAttr(final Button button, VisTable uniqueTable) {
         String imageUp = null;
         String imageDown = null;
         String imageCheck = null;

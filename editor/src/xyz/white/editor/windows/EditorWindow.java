@@ -24,14 +24,11 @@ import xyz.white.editor.events.shortcut.AlignEvent;
  */
 
 public class EditorWindow extends VisWindow {
-    private MainWindow mainWindow;
-    private VisTable shortcutTable;
     private Group group;
     private boolean isChange = false;
 
     public EditorWindow(final MainWindow mainWindow) {
         super("Editor",false);
-        this.mainWindow = mainWindow;
         setSize(Config.width * 0.6f, Config.height * 0.7f);
         group = new Group();
         group.setSize(mainWindow.getWidth(),mainWindow.getHeight());
@@ -97,7 +94,7 @@ public class EditorWindow extends VisWindow {
 
 
     private void initShortCutTable(){
-        shortcutTable = new VisTable();
+        VisTable shortcutTable = new VisTable();
         VisImageButton alignLeftBtn = new VisImageButton(new TextureRegionDrawable(new TextureRegion(
                 EditorManager.getInstance().assetManager.get("icon/align_left.png",Texture.class)
         )));

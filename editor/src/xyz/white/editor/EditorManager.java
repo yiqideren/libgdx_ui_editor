@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.SnapshotArray;
 import com.google.common.eventbus.EventBus;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
@@ -21,7 +20,6 @@ import net.mwplay.nativefont.NativeFont;
 import net.mwplay.nativefont.NativeLabel;
 import xyz.white.editor.events.Event;
 
-import java.util.ArrayList;
 
 /**
  * Created by 10037 on 2017/4/16 0016.
