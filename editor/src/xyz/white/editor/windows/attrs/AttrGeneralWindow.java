@@ -25,7 +25,7 @@ public class AttrGeneralWindow extends VisWindow {
     private VisTextField xTextField = null;
     private VisTextField nameTextField = null;
     private VisTextField yTextField = null;
-    private VisTextField orignXTextField,orignYTextField,widthText,heightText,rotationText;
+    private VisTextField orignXTextField,orignYTextField,widthText,heightText,rotationText,zIndexTF;
     private VisTextField scaleXTF,scaleYTF;
     private Image colorImage;
     private ColorPicker picker ;
@@ -149,8 +149,15 @@ public class AttrGeneralWindow extends VisWindow {
         generalTable.add(visibleBox);
         generalTable.row();
 
+        generalTable.add(new VisLabel("Z"));
+        zIndexTF = new VisTextField();
+        zIndexTF.setTextFieldFilter(DigitsFieldFilter.instance);
+        generalTable.add(zIndexTF).width(getWidth()*0.3f).left();
+
         generalTable.left().padLeft(10).top().padTop(10);
-        add(generalTable).expand().top();
+        VisScrollPane scrollPane = new VisScrollPane(generalTable);
+        scrollPane.setScrollingDisabled(true,false);
+        add(scrollPane).expand().top();
 
         nameTextField.setTextFieldListener(nameFieldListener);
 
@@ -162,7 +169,7 @@ public class AttrGeneralWindow extends VisWindow {
 
         scaleXTF.setTextFieldListener(scaleFieldListener);
         scaleYTF.setTextFieldListener(scaleFieldListener);
-
+        zIndexTF.setTextFieldListener(zIndexTFListener);
         orignXTextField.setTextFieldListener(orginChangeFieldListener);
         orignYTextField.setTextFieldListener(orginChangeFieldListener);
 
@@ -174,6 +181,14 @@ public class AttrGeneralWindow extends VisWindow {
         public void keyTyped(VisTextField textField, char c) {
             String name = nameTextField.getText();
             EditorManager.getInstance().getEventBus().post(new ActorNameEvent(name));
+        }
+    };
+
+    private VisTextField.TextFieldListener zIndexTFListener = new VisTextField.TextFieldListener() {
+        @Override
+        public void keyTyped(VisTextField textField, char c) {
+            float zIndx = Float.valueOf(zIndexTF.getText().isEmpty()?"0":zIndexTF.getText());
+            EditorManager.getInstance().getEventBus().post(new ActorZIndexEvent((int) zIndx));
         }
     };
 
@@ -251,6 +266,7 @@ public class AttrGeneralWindow extends VisWindow {
         colorImage.setColor(actor.getColor());
         picker.setColor(actor.getColor());
         visibleBox.setChecked(actor.isVisible());
+        zIndexTF.setText(String.valueOf(actor.getZIndex()));
     }
 
 
