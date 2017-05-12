@@ -76,7 +76,7 @@ public class AttrUniqueWindow extends VisWindow {
         labelTextField.setTextFieldListener(new TextField.TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char c) {
-                EditorManager.getInstance().getEventBus().post(new ActorTextEvent(textField.getText(), c));
+                EditorManager.getInstance().getEventBus().post(new ActorTextEvent(textField.getText()));
                 XmlUtils.attr2Label(label, checkBox_wrap.isChecked());
             }
         });

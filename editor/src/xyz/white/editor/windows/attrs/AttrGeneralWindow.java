@@ -182,7 +182,7 @@ public class AttrGeneralWindow extends VisWindow {
         public void finished(Color newColor) {
             super.finished(newColor);
             colorImage.setColor(newColor);
-            EditorManager.getInstance().getEventBus().post(newColor);
+            EditorManager.getInstance().getEventBus().post(new ActorColorEvent(newColor));
         }
     };
 

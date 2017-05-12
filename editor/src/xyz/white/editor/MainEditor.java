@@ -37,6 +37,8 @@ public class MainEditor extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
+	    Gdx.app.log("app","dispose-----1111-----");
+        EditorManager.getInstance().clearEvents();
 		VisUI.dispose();
 		mainStage.dispose();
 	}

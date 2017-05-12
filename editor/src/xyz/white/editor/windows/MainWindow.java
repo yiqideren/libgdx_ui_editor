@@ -29,6 +29,8 @@ import net.mwplay.nativefont.NativeLabel;
 import xyz.white.editor.Config;
 import xyz.white.editor.EditorManager;
 import xyz.white.editor.actors.SelectGroup;
+import xyz.white.editor.events.*;
+import xyz.white.editor.events.Event;
 import xyz.white.editor.events.assets.LoadSceneEvent;
 import xyz.white.editor.events.attrs.*;
 import xyz.white.editor.events.editor.ActorAddEvent;
@@ -183,109 +185,6 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
 
 
     @Override
-    public void changeColor(Color color) {
-        Actor curActor = selectedGroup.getLastSelectActor();
-        if (curActor != null) {
-            if (curActor.equals(MainWindow.this)) {
-                //                setBackGround(color);
-            } else {
-                curActor.setColor(color);
-            }
-            if (editorLister != null) editorLister.change();
-        }
-    }
-
-    @Override
-    public void changePos(ActorPosChangeEvent event) {
-        Actor curActor = selectedGroup.getLastSelectActor();
-        if (curActor != null) {
-            curActor.setPosition(event.x, event.y, event.align);
-            if (editorLister != null) editorLister.change();
-        }
-        selectedGroup.initLayout();
-    }
-
-    @Override
-    public void changeSize(ActorSizeEvent actorSizeEvent) {
-        Actor curActor = selectedGroup.getLastSelectActor();
-        if (curActor != null) {
-            if (curActor.equals(MainWindow.this)) {
-                this.setOrigin(Align.center);
-            }
-            curActor.setSize(actorSizeEvent.width, actorSizeEvent.height);
-            if (editorLister != null) editorLister.change();
-        }
-        selectedGroup.initLayout();
-    }
-
-    @Override
-    public void changeScale(ActorScaleEvent event) {
-        Actor curActor = selectedGroup.getLastSelectActor();
-        if (curActor != null) {
-            event.setTarget(curActor);
-            event.redo();
-            EditorManager.getInstance().addEvent(event);
-        }
-    }
-
-    @Override
-    public void changeOrigin(ActorOriginEvent actorOriginEvent) {
-        Actor curActor = selectedGroup.getLastSelectActor();
-        if (curActor != null) {
-            if (actorOriginEvent.align == -1) {
-                curActor.setOrigin(actorOriginEvent.originX, actorOriginEvent.originY);
-            } else {
-                curActor.setOrigin(actorOriginEvent.align);
-            }
-            if (editorLister != null) editorLister.change();
-        }
-    }
-
-    @Override
-    public void changeTextAttr(ActorTextEvent actorTextEvent) {
-        Actor curActor = selectedGroup.getLastSelectActor();
-        if (curActor != null) {
-            if (curActor instanceof Label) {
-                ((Label) curActor).setText(actorTextEvent.msg);
-                if (editorLister != null) editorLister.change();
-            }
-        }
-    }
-
-    @Override
-    public void setLabelWrap(LabelWrapEvent labelWrapEvent) {
-        Actor curActor = selectedGroup.getLastSelectActor();
-        if (curActor != null) {
-            if (curActor instanceof Label) {
-                ((Label) curActor).setWrap(labelWrapEvent.isWrap);
-                if (editorLister != null) editorLister.change();
-            }
-
-        }
-    }
-
-    @Override
-    public void setAlign(ActorAlignEvent alignEvent) {
-        Actor curActor = selectedGroup.getLastSelectActor();
-        if (curActor != null) {
-            if (curActor instanceof Label) {
-                ((Label) curActor).setAlignment(alignEvent.align);
-            }
-            if (editorLister != null) editorLister.change();
-        }
-    }
-
-    @Override
-    public void changeRotate(ActorRotationEvent event) {
-        float rotation = event.rotation;
-        Actor curActor = selectedGroup.getLastSelectActor();
-        if (curActor != null) {
-            curActor.setRotation(rotation);
-            if (editorLister != null) editorLister.change();
-        }
-    }
-
-    @Override
     public void setImagePath(ImagePathEvent event) {
         Actor curActor = selectedGroup.getLastSelectActor();
         if (curActor instanceof Image) {
@@ -367,36 +266,15 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
         }
     }
 
-    @Override
-    public void setActorVisible(ActorVisibleEvent event) {
-        Actor actor = selectedGroup.getLastSelectActor();
-        if (actor != null) {
-            event.setTarget(actor);
-            event.redo();
-            EditorManager.getInstance().addEvent(event);
-            if (editorLister != null) editorLister.change();
-        }
-    }
+
 
     @Override
-    public void setActorName(ActorNameEvent event) {
-        Actor actor = selectedGroup.getLastSelectActor();
-        if (actor != null) {
-            event.setTarget(actor);
-            event.redo();
+    public void selecedActorEvent(SelectedActorEvent event) {
+        event.setSelectGroup(selectedGroup);
+        event.redo();
+        if (editorLister != null) editorLister.change();
+        if (event.isUndo){
             EditorManager.getInstance().addEvent(event);
-            if (editorLister != null) editorLister.change();
-        }
-    }
-
-    @Override
-    public void setTextFieldText(TextFieldTextEvent event) {
-        Actor actor = selectedGroup.getLastSelectActor();
-        if (actor != null && actor instanceof TextField) {
-            ((TextField) actor).setText(event.text);
-            ((TextField) actor).setMessageText(event.message);
-//            EditorManager.getInstance().addEvent(event);
-            if (editorLister != null) editorLister.change();
         }
     }
 
@@ -489,18 +367,6 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
                 }
             }
         }
-    }
-
-    @Override
-    public Actor debug() {
-        return super.debug();
-    }
-
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-//        Gdx.app.log("appX","X:" + getX()+"\tY\t"+getY());
-//        cubDrawable.draw(batch, getX(), getY(), getWidth() * getScaleX(), getHeight() * getScaleY());
-        super.draw(batch, parentAlpha);
     }
 
     public interface EditorLister {
