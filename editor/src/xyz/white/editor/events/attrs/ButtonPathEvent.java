@@ -10,10 +10,10 @@ public class ButtonPathEvent implements Event {
     public String down;
     public String check;
 
-    public ButtonPathEvent(String up,String down,String check){
-        this.up = up;
-        this.down = down;
-        this.check = check;
+    public ButtonPathEvent(String[] strings){
+        this.up = strings[0];
+        this.down = strings[1];
+        this.check = strings[2];
     }
 
     @Override

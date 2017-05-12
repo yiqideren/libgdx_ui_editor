@@ -26,6 +26,7 @@ public class AttrGeneralWindow extends VisWindow {
     private VisTextField nameTextField = null;
     private VisTextField yTextField = null;
     private VisTextField orignXTextField,orignYTextField,widthText,heightText,rotationText;
+    private VisTextField scaleXTF,scaleYTF;
     private Image colorImage;
     private ColorPicker picker ;
     private VisCheckBox visibleBox;
@@ -47,13 +48,13 @@ public class AttrGeneralWindow extends VisWindow {
 
 
         generalTable.add(new VisLabel("X"));
-        DigitsFieldFilter digitsFieldFilter = new DigitsFieldFilter();
+        DigitsFieldFilter digitsFieldFilter = DigitsFieldFilter.instance;
         xTextField = new VisTextField();
         xTextField.setTextFieldFilter(digitsFieldFilter);
         generalTable.add(xTextField).width(getWidth()*0.3f).left();
         generalTable.add(new VisLabel("Y")).expand().width(20);
         yTextField = new VisTextField();
-        yTextField.setTextFieldFilter(new DigitsFieldFilter());
+        yTextField.setTextFieldFilter(digitsFieldFilter);
         generalTable.add(yTextField).expand().width(getWidth()*0.3f).left();
         generalTable.row();
         final VisSelectBox<String> selectPosBox = new VisSelectBox<String>();
@@ -72,6 +73,17 @@ public class AttrGeneralWindow extends VisWindow {
         generalTable.add();
         generalTable.add(selectPosBox).width(getWidth()*0.3f).left();
         generalTable.row();
+
+        generalTable.add(new VisLabel("ScaleX"));
+        scaleXTF = new VisTextField();
+        scaleXTF.setTextFieldFilter(DigitsFieldFilter.instance);
+        generalTable.add(scaleXTF).width(getWidth()*0.3f).left();
+        scaleYTF = new VisTextField();
+        scaleYTF.setTextFieldFilter(DigitsFieldFilter.instance);
+        generalTable.add(new VisLabel("ScaleY"));
+        generalTable.add(scaleYTF).width(getWidth()*0.3f).left();
+        generalTable.row();
+
 
         generalTable.add(new VisLabel("OrginX"));
         orignXTextField = new VisTextField();
@@ -148,6 +160,9 @@ public class AttrGeneralWindow extends VisWindow {
         widthText.setTextFieldListener(sizeChangeFieldListener);
         heightText.setTextFieldListener(sizeChangeFieldListener);
 
+        scaleXTF.setTextFieldListener(scaleFieldListener);
+        scaleYTF.setTextFieldListener(scaleFieldListener);
+
         orignXTextField.setTextFieldListener(orginChangeFieldListener);
         orignYTextField.setTextFieldListener(orginChangeFieldListener);
 
@@ -168,6 +183,15 @@ public class AttrGeneralWindow extends VisWindow {
             super.finished(newColor);
             colorImage.setColor(newColor);
             EditorManager.getInstance().getEventBus().post(newColor);
+        }
+    };
+
+    private VisTextField.TextFieldListener scaleFieldListener = new VisTextField.TextFieldListener() {
+        @Override
+        public void keyTyped(VisTextField textField, char c) {
+            float scaleX = Float.valueOf(scaleXTF.getText().isEmpty()?"0":scaleXTF.getText());
+            float scaleY = Float.valueOf(scaleYTF.getText().isEmpty()?"0":scaleYTF.getText());
+            EditorManager.getInstance().getEventBus().post(new ActorScaleEvent(scaleX,scaleY));
         }
     };
 
@@ -217,6 +241,8 @@ public class AttrGeneralWindow extends VisWindow {
         xTextField.setText(String.format("%.2f",actor.getX()));
         yTextField.setText(String.format("%.2f",actor.getY()));
         nameTextField.setText(actor.getName());
+        scaleXTF.setText(String.valueOf(actor.getScaleX()));
+        scaleYTF.setText(String.valueOf(actor.getScaleY()));
         orignYTextField.setText(String.format("%.2f",actor.getOriginY()));
         orignXTextField.setText(String.format("%.2f",actor.getOriginX()));
         widthText.setText(String.format("%.2f",actor.getWidth()));

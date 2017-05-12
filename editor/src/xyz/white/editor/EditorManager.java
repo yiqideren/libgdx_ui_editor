@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -47,6 +48,12 @@ public class EditorManager {
         assetManager.load("icon/align_h_center.png",Texture.class);
         assetManager.load("icon/align_bottom.png",Texture.class);
         assetManager.load("icon/align_top.png",Texture.class);
+        assetManager.load("icon/label.png",Texture.class);
+        assetManager.load("icon/image.png",Texture.class);
+        assetManager.load("icon/group.png",Texture.class);
+        assetManager.load("icon/button.png",Texture.class);
+        assetManager.load("icon/checkbox.png",Texture.class);
+        assetManager.load("icon/textfield.png",Texture.class);
         assetManager.finishLoading();
     }
 
@@ -97,7 +104,7 @@ public class EditorManager {
     public NativeFont getTextInputFont(){
         if (inputFont == null) {
             inputFont = new NativeFont();
-            inputFont.setSize(16);
+            inputFont.setSize(14);
         }
         return inputFont;
     }

@@ -22,6 +22,9 @@ public interface ChangeActorAttrListener {
     void changeSize(ActorSizeEvent actorSizeEvent);
 
     @Subscribe
+    void changeScale(ActorScaleEvent event);
+
+    @Subscribe
     void changeOrigin(ActorOriginEvent actorOriginEvent);
 
     @Subscribe
@@ -38,6 +41,8 @@ public interface ChangeActorAttrListener {
 
     @Subscribe
     void setImagePath(ImagePathEvent event);
+    @Subscribe
+    void setNineDrawable(NineDrawableEvent event);
 
     @Subscribe
     void setButtonPath(ButtonPathEvent event);

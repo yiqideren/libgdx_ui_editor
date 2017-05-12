@@ -14,13 +14,10 @@ public class StageLoad {
         if (path==null || parentGroup == null) return;
         FileHandle sceneFile = Gdx.files.internal(path);
         if (sceneFile.exists()){
-            Gdx.app.log("oeifoef","111111");
             try {
                 XmlUtils.readFile(parentGroup,sceneFile);
-                Gdx.app.log("oeifoef","000000");
             } catch (IOException e) {
                 e.printStackTrace();
-                Gdx.app.log("oeifoef","2222");
             }
         }
     }

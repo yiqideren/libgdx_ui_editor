@@ -34,18 +34,20 @@ public class EditorWindow extends VisWindow {
         group.setSize(mainWindow.getWidth(),mainWindow.getHeight());
         group.setPosition(getWidth()/2,getHeight()/2,Align.center);
         group.addActor(mainWindow);
-
         initShortCutTable();
-
-
         addActor(group);
         EditorWindow.this.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (EditorWindow.this.hit(x,y,true).equals(EditorWindow.this)){
+                }
+                return super.touchDown(event, x, y, pointer, button);
+            }
 
             @Override
             public boolean scrolled(InputEvent event, float x, float y, int amount) {
                 if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
                     float scaleFactor = -0.1f;
-
                     mainWindow.scaleBy(amount*scaleFactor);
                     group.setSize(mainWindow.getWidth()*mainWindow.getScaleX(),
                             mainWindow.getHeight()*mainWindow.getScaleY());

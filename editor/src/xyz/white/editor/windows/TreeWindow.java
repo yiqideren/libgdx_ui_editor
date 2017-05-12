@@ -2,6 +2,8 @@ package xyz.white.editor.windows;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -133,10 +135,13 @@ public class TreeWindow extends VisWindow implements EditorEventListener,KeyBoar
         StringBuilder item_name = new StringBuilder();
         item_name.append(actor.getName()==null?"":actor.getName());
         item_name.append("[");
+
         item_name.append(EditorManager.getInstance()
                 .getActorType(actor).getSimpleName());
         item_name.append("]");
         Tree.Node item = createNodeItem(actor,item_name.toString());
+        item.setIcon(new TextureRegionDrawable(new TextureRegion(new Texture(
+                Gdx.files.internal("icon/Label_16.png")))));
         item.getActor().setTouchable(Touchable.disabled);
         if (actor.getParent() instanceof MainWindow){
             stageNode.add(item);
@@ -180,7 +185,7 @@ public class TreeWindow extends VisWindow implements EditorEventListener,KeyBoar
         }
     }
 
-    public void addActorIntoTree(Actor actor, Tree.Node parentNode){
+    private void addActorIntoTree(Actor actor, Tree.Node parentNode){
         if (actor instanceof MainWindow){
             for (Actor child:((MainWindow) actor).getChildren()){
                 if (child instanceof SelectGroup) continue;
@@ -190,10 +195,12 @@ public class TreeWindow extends VisWindow implements EditorEventListener,KeyBoar
             StringBuilder item_name = new StringBuilder();
             item_name.append(actor.getName()==null?"":actor.getName());
             item_name.append("[");
-            item_name.append(EditorManager.getInstance()
-                    .getActorType(actor).getSimpleName());
+            String actorName = EditorManager.getInstance()
+                    .getActorType(actor).getSimpleName();
+            item_name.append(actorName);
             item_name.append("]");
             Tree.Node item = createNodeItem(actor,item_name.toString());
+//            item.setIcon(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icon/label.png")))));
             item.getActor().setTouchable(Touchable.disabled);
             parentNode.add(item);
             if (actor instanceof Group){

@@ -105,9 +105,9 @@ include <visui-1.3.0>
   vis-radio-tick-disabled: {name: t-radio-tick, color: grey}
   vis-red: {name: t-dot, color: t-warn}
   white: {name: t-dot, color: white}
-  window: {name: t-window, color: t-dark}
-  window-bg: {name: t-dot, color: t-dark}
-  window-border-bg: {name: t-dot, color: t-dark}
-  window-noborder: {name: t-window-border, color: t-dark}
-  window-resizable: {name: t-window-resize, color: t-dark}
+  window: {name: t-window, color: t-light}
+  window-bg: {name: t-dot, color: t-light}
+  window-border-bg: {name: t-dot, color: t-medium}
+  window-noborder: {name: t-window-border, color: t-light}
+  window-resizable: {name: t-window-resize, color: t-light}
 }

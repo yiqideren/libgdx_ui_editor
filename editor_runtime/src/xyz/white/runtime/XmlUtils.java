@@ -3,15 +3,19 @@ package xyz.white.runtime;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.XmlReader;
 import net.mwplay.nativefont.NativeFont;
+import net.mwplay.nativefont.NativeFontPaint;
 import net.mwplay.nativefont.NativeLabel;
+import net.mwplay.nativefont.NativeTextField;
 
 import java.io.IOException;
 
@@ -56,7 +60,7 @@ public class XmlUtils {
             case "Group":
                 return new Group();
             case "Label":
-                return new NativeLabel("",new NativeFont());
+                return new NativeLabel("",new NativeFont(new NativeFontPaint(14)));
             case "CheckBox":
 //                return new CheckBox("");
             case "Image":
@@ -64,7 +68,6 @@ public class XmlUtils {
             case "Button":
                 return new Button();
             case "TextField":
-//                return new TextField("");
             default:
                 return new Actor();
         }
@@ -117,10 +120,21 @@ public class XmlUtils {
 
     public static void parseImage(Image image, XmlReader.Element element){
         String imagePath = element.get("image","");
-        image.setDrawable(new TextureRegionDrawable(new TextureRegion(
-                new Texture(Gdx.files.internal(imagePath))
-        )));
+        boolean isNine   = element.getBoolean("isNine",false);
+        int[] nine = {1,1,1,1};
+        Texture texture = new Texture(Gdx.files.internal(imagePath));
+        Drawable drawable;
+        if (isNine){
+            nine[0] = element.getInt("left",1);
+            nine[1] = element.getInt("right",1);
+            nine[2] = element.getInt("top",1);
+            nine[3] = element.getInt("bottom",1);
+            drawable = new NinePatchDrawable(new NinePatch(texture,nine[0],nine[1],nine[2],nine[3]));
+        }else {
+            drawable = new TextureRegionDrawable(new TextureRegion(texture));
+        }
 
+        image.setDrawable(drawable);
     }
 
     public static void parseButton(Button button, XmlReader.Element element){

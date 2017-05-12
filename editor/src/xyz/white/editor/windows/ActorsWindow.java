@@ -16,6 +16,7 @@ import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 import xyz.white.editor.Config;
+import xyz.white.editor.EditorManager;
 
 /**
  * Created by 10037 on 2017/4/15 0015.
@@ -29,7 +30,7 @@ public class ActorsWindow extends VisWindow{
         setSize(Config.width*0.2f,Config.height/2);
         this.targetWindow = targetWindow;
 
-        GridGroup table = new GridGroup(80,4);
+        GridGroup table = new GridGroup(64,4);
         init(table);
         VisScrollPane scrollPane = new VisScrollPane(table);
         scrollPane.setOverscroll(true, false);
@@ -37,17 +38,17 @@ public class ActorsWindow extends VisWindow{
     }
 
     private void init(GridGroup visTable){
-        VisImageButton label =  new VisImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icon/label.png"))))
+        VisImageButton label =  new VisImageButton(new TextureRegionDrawable(new TextureRegion(EditorManager.getInstance().assetManager.get("icon/label.png",Texture.class)))
                             ,"Label");
-        VisImageButton image =    new VisImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icon/image.png"))))
+        VisImageButton image =    new VisImageButton(new TextureRegionDrawable(new TextureRegion(EditorManager.getInstance().assetManager.get("icon/image.png",Texture.class)))
                             ,"Image");
-        VisImageButton button =   new VisImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icon/button.png"))))
+        VisImageButton button =   new VisImageButton(new TextureRegionDrawable(new TextureRegion(EditorManager.getInstance().assetManager.get("icon/button.png",Texture.class)))
                             ,"Button");
-        VisImageButton checkbox = new VisImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icon/checkbox.png"))))
+        VisImageButton checkbox = new VisImageButton(new TextureRegionDrawable(new TextureRegion(EditorManager.getInstance().assetManager.get("icon/checkbox.png",Texture.class)))
                             ,"CheckBox");
-        VisImageButton textfield = new VisImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icon/textfield.png"))))
+        VisImageButton textfield = new VisImageButton(new TextureRegionDrawable(new TextureRegion(EditorManager.getInstance().assetManager.get("icon/textfield.png",Texture.class)))
                             ,"TextField");
-        VisImageButton group = new VisImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("icon/group.png"))))
+        VisImageButton group = new VisImageButton(new TextureRegionDrawable(new TextureRegion(EditorManager.getInstance().assetManager.get("icon/group.png",Texture.class)))
                             ,"Group");
 
 

@@ -131,7 +131,6 @@ public class AssetWindow extends VisTable implements ApplicationEventListener {
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollingDisabled(true, false);
         VisTable contentTable = new VisTable(true);
-        filesView.debug();
 
         scrollPane.addListener(rightMenu.getDefaultInputListener());
         contentTable.add(toobarTable).expandX().fillX().padTop(5);

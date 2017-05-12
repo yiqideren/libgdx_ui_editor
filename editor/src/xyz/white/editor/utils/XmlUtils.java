@@ -1,6 +1,8 @@
 package xyz.white.editor.utils;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.XmlReader;
 import com.kotcrab.vis.ui.widget.VisImageButton;
@@ -53,11 +56,23 @@ public class XmlUtils {
 
     public static void parseImage(Image image, XmlReader.Element element){
         String imagePath = element.get("image","");
-        image.setDrawable(new TextureRegionDrawable(new TextureRegion(
-                new Texture(Config.getImageFilePath(imagePath))
-        )));
+        boolean isNine   = element.getBoolean("isNine",false);
+        int[] nine = {1,1,1,1};
+        Texture texture = new Texture(Config.getImageFilePath(imagePath));
+        Drawable drawable;
+        if (isNine){
+            nine[0] = element.getInt("left",1);
+            nine[1] = element.getInt("right",1);
+            nine[2] = element.getInt("top",1);
+            nine[3] = element.getInt("bottom",1);
+            drawable = new NinePatchDrawable(new NinePatch(texture,nine[0],nine[1],nine[2],nine[3]));
+        }else {
+            drawable = new TextureRegionDrawable(new TextureRegion(texture));
+        }
 
-        attr2Image(image,imagePath);
+        image.setDrawable(drawable);
+
+        attr2Image(image,imagePath,isNine,nine);
     }
 
     public static void parseButton(VisImageButton button, XmlReader.Element element){
@@ -71,7 +86,7 @@ public class XmlUtils {
                 up,down,checked,up,down,checked
         );
         button.setStyle(buttonStyle);
-        attr2Button(button,upPath,downPath,checkPath);
+        attr2Button(button, new String[]{upPath, downPath, checkPath});
     }
 
     public static void parseTextField(TextField textField, XmlReader.Element element){
@@ -83,32 +98,46 @@ public class XmlUtils {
     }
 
 
-    public static void attr2Image(Image image, String imagePath){
-        HashMap hashMap = new HashMap();
-        hashMap.put("image",imagePath);
+    public static void attr2Image(Image image, String imagePath,boolean isNine,int[] nines){
+        HashMap hashMap = getActorAttr(image);
+        if (imagePath!=null)hashMap.put("image",imagePath);
+        hashMap.put("isNine",isNine);
+        if (isNine ){
+            hashMap.put("left",nines[0]);
+            hashMap.put("right",nines[1]);
+            hashMap.put("top",nines[2]);
+            hashMap.put("bottom",nines[3]);
+        }
         image.setUserObject(hashMap);
     }
 
     public static void attr2Label(Label label, boolean isWrap){
-        HashMap<String,String> hashMap = new HashMap<>();
+        HashMap<String,String> hashMap = getActorAttr(label);
         hashMap.put("text",label.getText().toString());
         hashMap.put("isWrap",String.valueOf(isWrap));
         label.setUserObject(hashMap);
     }
 
-    public static void attr2Button(Button button, String up, String down, String check){
-        HashMap<String,String> hashMap = new HashMap<>();
-        hashMap.put("up",up);
-        hashMap.put("down",down);
-        hashMap.put("check",check);
+    public static void attr2Button(Button button, String[] strings){
+        HashMap<String,String> hashMap = getActorAttr(button);
+        hashMap.put("up",strings[0]);
+        hashMap.put("down",strings[1]);
+        hashMap.put("check",strings[2]);
         button.setUserObject(hashMap);
     }
 
     public static void attr2TextField(TextField textField){
-        HashMap<String,String> hashMap = new HashMap<>();
+        HashMap<String,String> hashMap = getActorAttr(textField);
         hashMap.put("text",textField.getText());
         hashMap.put("messageText",textField.getMessageText());
         textField.setUserObject(hashMap);
     }
 
+    private static HashMap getActorAttr(Actor actor){
+        if (actor.getUserObject() !=null && actor.getUserObject() instanceof HashMap){
+            return (HashMap) actor.getUserObject();
+        }else {
+           return new HashMap<>();
+        }
+    }
 }

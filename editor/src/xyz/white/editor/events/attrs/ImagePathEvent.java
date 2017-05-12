@@ -7,9 +7,13 @@ import xyz.white.editor.events.Event;
  */
 public class ImagePathEvent implements Event {
     public String imagePath;
+    public boolean isNine;
+    public int[] nines;
 
-    public ImagePathEvent(String imagePath){
+    public ImagePathEvent(String imagePath,boolean isNine,int[] nines){
         this.imagePath = imagePath;
+        this.isNine = isNine;
+        this.nines = nines;
     }
 
     @Override

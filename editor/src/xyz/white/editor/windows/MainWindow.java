@@ -1,15 +1,18 @@
 package xyz.white.editor.windows;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -207,6 +210,16 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
     }
 
     @Override
+    public void changeScale(ActorScaleEvent event) {
+        Actor curActor = selectedGroup.getLastSelectActor();
+        if (curActor!=null){
+            event.setTarget(curActor);
+            event.redo();
+            EditorManager.getInstance().addEvent(event);
+        }
+    }
+
+    @Override
     public void changeOrigin(ActorOriginEvent actorOriginEvent) {
         Actor curActor = selectedGroup.getLastSelectActor();
         if (curActor != null) {
@@ -268,12 +281,36 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
         Actor curActor = selectedGroup.getLastSelectActor();
         if (curActor instanceof Image) {
             Texture source = new Texture(Config.getImageFilePath(event.imagePath));
-            ((Image) curActor).setDrawable(new TextureRegionDrawable(new TextureRegion(
-                    source)
-            ));
-            curActor.setSize(source.getWidth(), source.getHeight());
+            Drawable sourceDra ;
+            if (event.isNine){
+                int left = event.nines[0];
+                int right =  event.nines[1];
+                int top =  event.nines[2];
+                int bottom =  event.nines[3];
+                sourceDra = new NinePatchDrawable(new NinePatch(source,left,right,top,bottom));
+            }else {
+                sourceDra = new TextureRegionDrawable(new TextureRegion(
+                        source)
+                );
+            }
+            ((Image) curActor).setDrawable(sourceDra);
+            curActor.setSize(((Image) curActor).getPrefWidth(), ((Image) curActor).getPrefHeight());
             selectedGroup.initLayout();
             if (editorLister != null) editorLister.change();
+        }
+    }
+
+    @Override
+    public void setNineDrawable(NineDrawableEvent event) {
+        Actor curActor = selectedGroup.getLastSelectActor();
+        if (curActor instanceof Image) {
+            Image image = (Image) curActor;
+            if (image.getDrawable() instanceof NinePatchDrawable){
+                Gdx.app.log("app","set nine-----------------111");
+                NinePatchDrawable ninePatchDrawable = (NinePatchDrawable) image.getDrawable();
+                ninePatchDrawable.setPatch(new NinePatch(ninePatchDrawable.getPatch().getTexture()
+                        ,event.nines[0],event.nines[1],event.nines[2],event.nines[3]));
+            }
         }
     }
 
