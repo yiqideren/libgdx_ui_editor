@@ -23,13 +23,14 @@ import java.io.IOException;
  * Created by 10037 on 2017/5/10 0010.
  */
 public class XmlUtils {
+
     public static void readFile(Group group, FileHandle fileHandle) throws IOException {
         XmlReader xmlReader = new XmlReader();
         XmlReader.Element element = xmlReader.parse(fileHandle);
         readAttr(group,element);
     }
 
-    public static void readAttr(Group parentGroup, XmlReader.Element element){
+    private static void readAttr(Group parentGroup, XmlReader.Element element){
         if (element.getName().equals("Stage")){
             XmlUtils.parseGenAttr(parentGroup,element);
             if (element.getChildCount()>0){
@@ -55,7 +56,7 @@ public class XmlUtils {
 
     }
 
-    public static Actor getActorByName(String name){
+    private static Actor getActorByName(String name){
         switch (name){
             case "Group":
                 return new Group();
@@ -73,7 +74,7 @@ public class XmlUtils {
         }
     }
 
-    public static void parseGenAttr(Actor actor, XmlReader.Element element){
+    private static void parseGenAttr(Actor actor, XmlReader.Element element){
         actor.setWidth(element.getFloat("width",100));
         actor.setHeight(element.getFloat("height",100));
         actor.setPosition(element.getFloat("x",0),element.getFloat("y",0));
@@ -82,7 +83,7 @@ public class XmlUtils {
             actor.setName(element.get("name"));
         }
     }
-    public static Class getActorType(Actor actor){
+    private static Class getActorType(Actor actor){
         if (actor instanceof Label){
             return Label.class;
         }else if (actor instanceof CheckBox){
@@ -99,7 +100,8 @@ public class XmlUtils {
             return Actor.class;
         }
     }
-    public static void parseUqAttr(Actor actor, XmlReader.Element element){
+
+    private static void parseUqAttr(Actor actor, XmlReader.Element element){
         Class cls  = getActorType(actor);
         if (cls.equals(Label.class)){
             parseLabel((Label) actor,element);
@@ -112,13 +114,13 @@ public class XmlUtils {
         }
     }
 
-    public static void parseLabel(Label label, XmlReader.Element element){
+    private static void parseLabel(Label label, XmlReader.Element element){
         boolean isWrap = element.getBoolean("isWrap",false);
         label.setWrap(isWrap);
         label.setText(element.get("text",""));
     }
 
-    public static void parseImage(Image image, XmlReader.Element element){
+    private static void parseImage(Image image, XmlReader.Element element){
         String imagePath = element.get("image","");
         boolean isNine   = element.getBoolean("isNine",false);
         int[] nine = {1,1,1,1};
@@ -137,7 +139,7 @@ public class XmlUtils {
         image.setDrawable(drawable);
     }
 
-    public static void parseButton(Button button, XmlReader.Element element){
+    private static void parseButton(Button button, XmlReader.Element element){
         String upPath = element.get("up");
         String downPath = element.get("down");
         String checkPath = element.get("check");
@@ -148,7 +150,7 @@ public class XmlUtils {
         button.setStyle(buttonStyle);
     }
 
-    public static void parseTextField(TextField textField, XmlReader.Element element){
+    private static void parseTextField(TextField textField, XmlReader.Element element){
         String text = element.get("text","");
         String messageText = element.get("messageText","");
         textField.setText(text);

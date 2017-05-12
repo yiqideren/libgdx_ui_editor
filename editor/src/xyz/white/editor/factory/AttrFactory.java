@@ -43,7 +43,7 @@ public class AttrFactory {
         nineCheck.setChecked(isNine);
         VisTable table = new VisTable();
         final CollapsibleWidget collapsibleWidget = new CollapsibleWidget(table);
-        collapsibleWidget.setCollapsed(!nineCheck.isChecked());
+        collapsibleWidget.setCollapsed(!nineCheck.isChecked(),false);
         final VisTextField leftTF = new VisTextField(String.valueOf(nines[0]));
         final VisTextField rightTF = new VisTextField(String.valueOf(nines[1]));
         final VisTextField topTF = new VisTextField(String.valueOf(nines[2]));

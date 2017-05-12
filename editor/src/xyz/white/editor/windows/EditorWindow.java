@@ -40,6 +40,7 @@ public class EditorWindow extends VisWindow {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (EditorWindow.this.hit(x,y,true).equals(EditorWindow.this)){
+
                 }
                 return super.touchDown(event, x, y, pointer, button);
             }

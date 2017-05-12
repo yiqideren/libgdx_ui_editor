@@ -1,6 +1,9 @@
 version '1.0'
 
 apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.github.whitecostume'
 
 sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'

@@ -5,9 +5,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -40,6 +42,7 @@ import xyz.white.editor.events.shortcut.AlignEvent;
 import xyz.white.editor.events.tree.TreeActorMoveEvent;
 import xyz.white.editor.events.tree.TreeCancelEvent;
 import xyz.white.editor.events.tree.TreeSelectedActroEvent;
+import xyz.white.editor.utils.DrawableUtil;
 import xyz.white.editor.utils.FileUtils;
 
 import java.io.IOException;
@@ -48,11 +51,13 @@ import java.io.IOException;
  * Created by 10037 on 2017/4/15 0015.
  */
 
-public class MainWindow extends Group implements ChangeActorAttrListener, TreeEventListener, AssetEventListener,ShorcutEventListener {
+public class MainWindow extends Group implements ChangeActorAttrListener, TreeEventListener, AssetEventListener, ShorcutEventListener {
     private NativeFont font;
     private SelectGroup selectedGroup = new SelectGroup();
     private FileHandle curSceneFile;
     private EditorLister editorLister;
+    private Drawable cubDrawable;//用于显示场景大小
+    private ShapeRenderer shapeRenderer;
 
     public void setEditorLister(EditorLister editorLister) {
         this.editorLister = editorLister;
@@ -64,7 +69,11 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
 
     public MainWindow(String title) {
         setSize(480, 800);
+        cubDrawable = DrawableUtil.getRectLineDrawable("icon/select.9.png");
         debug();
+        shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setAutoShapeType(true);
+
         EditorManager.getInstance().getEventBus().register(this);
         font = EditorManager.getInstance().getMainFont();
         this.addListener(clickListener);
@@ -85,7 +94,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
                 cloneActor.setHeight(60);
                 break;
             case Config.CHECKBOX:
-                cloneActor = new CheckBox("CheckBox",VisUI.getSkin());
+                cloneActor = new CheckBox("CheckBox", VisUI.getSkin());
                 break;
             case Config.IMAGE:
                 cloneActor = new VisImage(EditorManager.getInstance().assetManager.get("badlogic.jpg", Texture.class));
@@ -141,11 +150,11 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
 
         @Override
         public void touchDragged(InputEvent event, float x, float y, int pointer) {
-            float orginX  = Math.min(x,startX);
-            float oaginY = Math.min(y,startY);
+            float orginX = Math.min(x, startX);
+            float oaginY = Math.min(y, startY);
             float width = Math.abs(startX - x);
             float hight = Math.abs(startY - y);
-            selectedGroup.setDragBounds(orginX, oaginY,width, hight);
+            selectedGroup.setDragBounds(orginX, oaginY, width, hight);
         }
 
     };
@@ -212,7 +221,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
     @Override
     public void changeScale(ActorScaleEvent event) {
         Actor curActor = selectedGroup.getLastSelectActor();
-        if (curActor!=null){
+        if (curActor != null) {
             event.setTarget(curActor);
             event.redo();
             EditorManager.getInstance().addEvent(event);
@@ -281,14 +290,14 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
         Actor curActor = selectedGroup.getLastSelectActor();
         if (curActor instanceof Image) {
             Texture source = new Texture(Config.getImageFilePath(event.imagePath));
-            Drawable sourceDra ;
-            if (event.isNine){
+            Drawable sourceDra;
+            if (event.isNine) {
                 int left = event.nines[0];
-                int right =  event.nines[1];
-                int top =  event.nines[2];
-                int bottom =  event.nines[3];
-                sourceDra = new NinePatchDrawable(new NinePatch(source,left,right,top,bottom));
-            }else {
+                int right = event.nines[1];
+                int top = event.nines[2];
+                int bottom = event.nines[3];
+                sourceDra = new NinePatchDrawable(new NinePatch(source, left, right, top, bottom));
+            } else {
                 sourceDra = new TextureRegionDrawable(new TextureRegion(
                         source)
                 );
@@ -305,11 +314,11 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
         Actor curActor = selectedGroup.getLastSelectActor();
         if (curActor instanceof Image) {
             Image image = (Image) curActor;
-            if (image.getDrawable() instanceof NinePatchDrawable){
-                Gdx.app.log("app","set nine-----------------111");
+            if (image.getDrawable() instanceof NinePatchDrawable) {
+                Gdx.app.log("app", "set nine-----------------111");
                 NinePatchDrawable ninePatchDrawable = (NinePatchDrawable) image.getDrawable();
                 ninePatchDrawable.setPatch(new NinePatch(ninePatchDrawable.getPatch().getTexture()
-                        ,event.nines[0],event.nines[1],event.nines[2],event.nines[3]));
+                        , event.nines[0], event.nines[1], event.nines[2], event.nines[3]));
             }
         }
     }
@@ -361,7 +370,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
     @Override
     public void setActorVisible(ActorVisibleEvent event) {
         Actor actor = selectedGroup.getLastSelectActor();
-        if (actor!=null){
+        if (actor != null) {
             event.setTarget(actor);
             event.redo();
             EditorManager.getInstance().addEvent(event);
@@ -372,7 +381,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
     @Override
     public void setActorName(ActorNameEvent event) {
         Actor actor = selectedGroup.getLastSelectActor();
-        if (actor!=null){
+        if (actor != null) {
             event.setTarget(actor);
             event.redo();
             EditorManager.getInstance().addEvent(event);
@@ -383,7 +392,7 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
     @Override
     public void setTextFieldText(TextFieldTextEvent event) {
         Actor actor = selectedGroup.getLastSelectActor();
-        if (actor!=null && actor instanceof TextField){
+        if (actor != null && actor instanceof TextField) {
             ((TextField) actor).setText(event.text);
             ((TextField) actor).setMessageText(event.message);
 //            EditorManager.getInstance().addEvent(event);
@@ -450,38 +459,49 @@ public class MainWindow extends Group implements ChangeActorAttrListener, TreeEv
 
     @Override
     public void align(AlignEvent alignEvent) {
-        if (selectedGroup.getAllActor().size>1){
+        if (selectedGroup.getAllActor().size > 1) {
             Actor tmp = selectedGroup.getAllActor().first();
             Vector2 tmpVec = new Vector2();
             tmp.localToStageCoordinates(tmpVec);
-            for (Actor actor:selectedGroup.getAllActor()){
+            for (Actor actor : selectedGroup.getAllActor()) {
                 if (actor.equals(tmp)) continue;
                 Vector2 vector2 = new Vector2(tmpVec);
                 actor.getParent().stageToLocalCoordinates(vector2);
-                switch (alignEvent.align){
+                switch (alignEvent.align) {
                     case Align.left:
-                        actor.setPosition(vector2.x,actor.getY());
+                        actor.setPosition(vector2.x, actor.getY());
                         break;
                     case Align.right:
-                        actor.setPosition(vector2.x+tmp.getWidth(),actor.getY()+actor.getHeight()/2,Align.right);
+                        actor.setPosition(vector2.x + tmp.getWidth(), actor.getY() + actor.getHeight() / 2, Align.right);
                         break;
                     case Align.center:
-                        actor.setPosition(vector2.x+tmp.getWidth()/2,actor.getY(Align.center),Align.center);
+                        actor.setPosition(vector2.x + tmp.getWidth() / 2, actor.getY(Align.center), Align.center);
                         break;
                     case Config.centerH:
-                        actor.setPosition(actor.getX(Align.center),vector2.y+tmp.getHeight()/2,Align.center);
+                        actor.setPosition(actor.getX(Align.center), vector2.y + tmp.getHeight() / 2, Align.center);
                         break;
                     case Align.bottom:
-                        actor.setPosition(actor.getX(),vector2.y);
+                        actor.setPosition(actor.getX(), vector2.y);
                         break;
                     case Align.top:
-                        actor.setPosition(actor.getX(),vector2.y+tmp.getHeight(),Align.topLeft);
+                        actor.setPosition(actor.getX(), vector2.y + tmp.getHeight(), Align.topLeft);
                         break;
                 }
             }
         }
     }
 
+    @Override
+    public Actor debug() {
+        return super.debug();
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+//        Gdx.app.log("appX","X:" + getX()+"\tY\t"+getY());
+//        cubDrawable.draw(batch, getX(), getY(), getWidth() * getScaleX(), getHeight() * getScaleY());
+        super.draw(batch, parentAlpha);
+    }
 
     public interface EditorLister {
         void loadScene();

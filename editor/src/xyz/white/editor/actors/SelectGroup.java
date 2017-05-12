@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Selection;
 import com.badlogic.gdx.utils.Array;
 import xyz.white.editor.EditorManager;
 import xyz.white.editor.events.editor.AttrEvent;
+import xyz.white.editor.utils.DrawableUtil;
 import xyz.white.editor.windows.MainWindow;
 
 /**
@@ -29,7 +30,7 @@ public class SelectGroup extends Group {
         cubRect = new Rectangle();
         childRect = new Rectangle();
         setCullingArea(cubRect);
-        cubDra = getRectLineDrawable();
+        cubDra = DrawableUtil.getRectLineDrawable("icon/select.9.png");
         selection = new Selection<Actor>();
         addListener(dragListener);
     }
@@ -184,14 +185,6 @@ public class SelectGroup extends Group {
         super.draw(batch, parentAlpha);
     }
 
-
-    // 创建钜形线条Drawable
-    public Drawable getRectLineDrawable() {
-        NinePatchDrawable nine = new NinePatchDrawable(new NinePatch(
-                EditorManager.getInstance().assetManager.get("icon/select.9.png",Texture.class),
-                2,2, 2, 2));
-        return nine;
-    }
 
     public int getSelectedActorSize(){
         return selection.size();
