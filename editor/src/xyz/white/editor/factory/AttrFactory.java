@@ -122,12 +122,12 @@ public class AttrFactory {
         nineCheck.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                int left = Integer.valueOf(leftTF.getText());
-                int right = Integer.valueOf(rightTF.getText());
-                int top = Integer.valueOf(topTF.getText());
-                int bottom = Integer.valueOf(bottomTF.getText());
+                nines[0] = Integer.valueOf(leftTF.getText());
+                nines[1] = Integer.valueOf(rightTF.getText());
+                nines[2] = Integer.valueOf(topTF.getText());
+                nines[3] = Integer.valueOf(bottomTF.getText());
                 String path = pathTextField.getText();
-                drawableAttrListener.selected(title, path, nineCheck.isChecked(), new int[]{left, right, top, bottom});
+                drawableAttrListener.selected(title, path, nineCheck.isChecked(), nines);
                 collapsibleWidget.setCollapsed(!nineCheck.isChecked());
             }
         });
@@ -138,7 +138,8 @@ public class AttrFactory {
             public void clicked(InputEvent event, float x, float y) {
                 final MainPanel mainPanel = new MainPanel();
                 mainPanel.setListeners(contentTable.getStage());
-                Texture texture = new Texture(Config.getImageFilePath(imagePath));
+                String path = pathTextField.getText();
+                Texture texture = new Texture(Config.getImageFilePath(path));
                 mainPanel.setTexture(new TextureRegion(texture),nines);
                 mainPanel.setSaveListener(new ClickListener(){
                     @Override
@@ -148,7 +149,6 @@ public class AttrFactory {
                         nines[2] = mainPanel.getSplits()[2];
                         nines[3] = mainPanel.getSplits()[3];
                         mainPanel.fadeOut();
-                        Gdx.app.log("tt","1"+nines[0]+"2"+nines[1]);
                         leftTF.setText(String.valueOf(nines[0]));
                         rightTF.setText(String.valueOf(nines[1]));
                         topTF.setText(String.valueOf(nines[2]));
