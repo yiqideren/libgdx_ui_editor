@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.XmlReader;
 import net.mwplay.nativefont.NativeFont;
 import net.mwplay.nativefont.NativeFontPaint;
 import net.mwplay.nativefont.NativeLabel;
-import net.mwplay.nativefont.NativeTextField;
 
 import java.io.IOException;
 

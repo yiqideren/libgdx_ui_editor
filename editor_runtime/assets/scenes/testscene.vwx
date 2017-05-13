@@ -8,4 +8,5 @@
 	<Image width="177.0" height="113.0" x="129.71426" y="269.2859" originX="0.0" originY="0.0" visible="true" image="orig/images/cloud1Night.png" isNine="false"/>
 	<Image width="299.0" height="500.0" x="468.3811" y="-25.475983" originX="0.0" originY="0.0" visible="true" image="orig/images/tree3.png" top="180" left="1" bottom="50" isNine="true" right="1"/>
 	<Image width="158.0" height="116.0" x="239.2143" y="59.904785" originX="0.0" originY="0.0" visible="true" image="orig/images/car.png" isNine="false"/>
+	<Image width="299.0" height="500.0" x="81.99985" y="-57.749878" originX="0.0" originY="0.0" visible="true" image="orig/images/tree3.png" top="181" left="117" bottom="59" isNine="true" right="134"/>
 </Stage>

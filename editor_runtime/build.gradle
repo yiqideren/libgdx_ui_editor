@@ -9,7 +9,8 @@ archivesBaseName = "ui-runtime"
 sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.main.java.srcDirs = [ "src/main/" ]
+sourceSets.test.java.srcDirs = [ "src/test/" ]
 project.ext.assetsDir = new File("../editor_runtime/assets");
 repositories {
     mavenCentral()
